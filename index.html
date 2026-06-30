@@ -703,7 +703,8 @@
     </section>
 
     <!-- IG 動態連動板塊 (Elfsight) -->
-    <section id="instagram" class="py-24 bg-black border-t border-b border-brand-primary/20 relative overflow-hidden">
+	
+	<section id="instagram" class="py-24 bg-black border-t border-b border-brand-primary/20 relative overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.05)_0%,transparent_70%)]"></div>
         
         <div class="container mx-auto px-6 relative z-10 animate-on-scroll">
@@ -712,11 +713,40 @@
                 <h4 class="text-2xl font-bold text-white tracking-widest">Follow @xhc_design</h4>
             </div>
 
-            <!-- Elfsight Instagram Feed | XHC Instagram Feed -->
             <script src="https://elfsightcdn.com/platform.js" async></script>
             <div class="elfsight-app-00cc41ac-f9f2-4558-aeac-8ceb1c1d45e8" data-elfsight-app-lazy></div>
         </div>
     </section>
+
+    <script>
+        (function() {
+            const removeElfsightAds = () => {
+                // 1. 拔除外層一般 DOM 產生的廣告與 Panel
+                const badElements = document.querySelectorAll([
+                    'a[href*="elfsight.com"]',
+                    '[class*="WidgetToolbar"]',
+                    '[class*="PopupContainer"]',
+                    '[class*="BadgeContainer"]',
+                    'div[style*="z-index: 999999"]',
+                    'div[style*="z-index: 2147483647"]'
+                ].join(','));
+                
+                badElements.forEach(el => el.remove());
+
+                // 2. 穿透 Shadow DOM 核心防禦（精準消滅內部浮動標籤）
+                const roots = document.querySelectorAll('.elfsight-app-00cc41ac-f9f2-4558-aeac-8ceb1c1d45e8');
+                roots.forEach(root => {
+                    if (root.shadowRoot) {
+                        const shadowAds = root.shadowRoot.querySelectorAll('a[href*="elfsight.com"], [class*="BadgeContainer"], [class*="WidgetToolbar"]');
+                        shadowAds.forEach(ad => ad.remove());
+                    }
+                });
+            };
+
+            // 網頁載入與動態生成時持續監控，一出現就秒殺
+            setInterval(removeElfsightAds, 300);
+        })();
+    </script>
 
     <!-- 聯絡區塊 -->
     <section id="contact" class="py-32">
