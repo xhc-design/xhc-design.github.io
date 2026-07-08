@@ -776,9 +776,56 @@
                             
                             <div class="space-y-2">
                                 <label class="text-sm text-brand-primary tracking-widest">車輛品牌 *</label>
-                                <select id="carBrand" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none h-48 overflow-y-auto">
+                                <select id="carBrand" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer">
                                     <option value="" disabled selected>請選擇品牌 (47種)</option>
-                                    <option value="Audi/奧迪">Audi/奧迪</option><option value="Alfa Romeo/愛快羅密歐">Alfa Romeo/愛快羅密歐</option><option value="Aston Martin/奧斯頓·馬丁">Aston Martin/奧斯頓·馬丁</option><option value="BMW/寶馬">BMW/寶馬</option><option value="Bentley/賓利">Bentley/賓利</option><option value="Bugatti/布卡堤">Bugatti/布卡堤</option><option value="CMC/中華">CMC/中華</option><option value="Daihatsu/大發">Daihatsu/大發</option><option value="Ford/福特">Ford/福特</option><option value="Ferrari/法拉利">Ferrari/法拉利</option><option value="Honda/本田">Honda/本田</option><option value="Hyundai/現代">Hyundai/現代</option><option value="Infiniti/極致">Infiniti/極致</option><option value="Jaguar/捷豹">Jaguar/捷豹</option><option value="Jeep/吉普">Jeep/吉普</option><option value="Kia/起亞">Kia/起亞</option><option value="KTM">KTM</option><option value="Koenigsegg/科尼塞克">Koenigsegg/科尼塞克</option><option value="Lexus/凌志">Lexus/凌志</option><option value="Land Rover">Land Rover</option><option value="Lotus/蓮花">Lotus/蓮花</option><option value="Lamborghini/藍寶堅尼">Lamborghini/藍寶堅尼</option><option value="Luxgen/納智捷">Luxgen/納智捷</option><option value="Mazda/馬自達">Mazda/馬自達</option><option value="Mitsubishi/三菱">Mitsubishi/三菱</option><option value="Mercedes-Benz/賓士">Mercedes-Benz/賓士</option><option value="Mini/迷你">Mini/迷你</option><option value="McLaren/麥拉倫">McLaren/麥拉倫</option><option value="Maserati/瑪莎拉蒂">Maserati/瑪莎拉蒂</option><option value="MG/名爵">MG/名爵</option><option value="Morgan/摩根">Morgan/摩根</option><option value="Nissan/日產">Nissan/日產</option><option value="Opel/歐寶">Opel/歐寶</option><option value="Porsche/保時捷">Porsche/保時捷</option><option value="Peugeot/寶獅">Peugeot/寶獅</option><option value="Pagani/帕加尼">Pagani/帕加尼</option><option value="Rolls-Royce/勞斯萊斯">Rolls-Royce/勞斯萊斯</option><option value="Renault/雷諾">Renault/雷諾</option><option value="Subaru/速霸陸">Subaru/速霸陸</option><option value="Suzuki/鈴木">Suzuki/鈴木</option><option value="Smart">Smart</option><option value="Skoda">Skoda</option><option value="Ssangyong/雙龍">Ssangyong/雙龍</option><option value="Toyota/豐田">Toyota/豐田</option><option value="Tesla/特斯拉">Tesla/特斯拉</option><option value="Volkswagen/福斯">Volkswagen/福斯</option><option value="Volvo/富豪">Volvo/富豪</option><option value="Other">其他未列出品牌</option>
+                                    <option value="Audi/奧迪">Audi/奧迪</option>
+                                    <option value="Alfa Romeo/愛快羅密歐">Alfa Romeo/愛快羅密歐</option>
+                                    <option value="Aston Martin/奧斯頓·馬丁">Aston Martin/奧斯頓·馬丁</option>
+                                    <option value="BMW/寶馬">BMW/寶馬</option>
+                                    <option value="Bentley/賓利">Bentley/賓利</option>
+                                    <option value="Bugatti/布卡堤">Bugatti/布卡堤</option>
+                                    <option value="CMC/中華">CMC/中華</option>
+                                    <option value="Daihatsu/大發">Daihatsu/大發</option>
+                                    <option value="Ford/福特">Ford/福特</option>
+                                    <option value="Ferrari/法拉利">Ferrari/法拉利</option>
+                                    <option value="Honda/本田">Honda/本田</option>
+                                    <option value="Hyundai/現代">Hyundai/現代</option>
+                                    <option value="Infiniti/極致">Infiniti/極致</option>
+                                    <option value="Jaguar/捷豹">Jaguar/捷豹</option>
+                                    <option value="Jeep/吉普">Jeep/吉普</option>
+                                    <option value="Kia/起亞">Kia/起亞</option>
+                                    <option value="KTM">KTM</option>
+                                    <option value="Koenigsegg/科尼塞克">Koenigsegg/科尼塞克</option>
+                                    <option value="Lexus/凌志">Lexus/凌志</option>
+                                    <option value="Land Rover">Land Rover</option>
+                                    <option value="Lotus/蓮花">Lotus/蓮花</option>
+                                    <option value="Lamborghini/藍寶堅尼">Lamborghini/藍寶堅尼</option>
+                                    <option value="Luxgen/納智捷">Luxgen/納智捷</option>
+                                    <option value="Mazda/馬自達">Mazda/馬自達</option>
+                                    <option value="Mitsubishi/三菱">Mitsubishi/三菱</option>
+                                    <option value="Mercedes-Benz/賓士">Mercedes-Benz/賓士</option>
+                                    <option value="Mini/迷你">Mini/迷你</option>
+                                    <option value="McLaren/麥拉倫">McLaren/麥拉倫</option>
+                                    <option value="Maserati/瑪莎拉蒂">Maserati/瑪莎拉蒂</option>
+                                    <option value="MG/名爵">MG/名爵</option>
+                                    <option value="Morgan/摩根">Morgan/摩根</option>
+                                    <option value="Nissan/日產">Nissan/日產</option>
+                                    <option value="Opel/歐寶">Opel/歐寶</option>
+                                    <option value="Porsche/保時捷">Porsche/保時捷</option>
+                                    <option value="Peugeot/寶獅">Peugeot/寶獅</option>
+                                    <option value="Pagani/帕加尼">Pagani/帕加尼</option>
+                                    <option value="Rolls-Royce/勞斯萊斯">Rolls-Royce/勞斯萊斯</option>
+                                    <option value="Renault/雷諾">Renault/雷諾</option>
+                                    <option value="Subaru/速霸陸">Subaru/速霸陸</option>
+                                    <option value="Suzuki/鈴木">Suzuki/鈴木</option>
+                                    <option value="Smart">Smart</option>
+                                    <option value="Skoda">Skoda</option>
+                                    <option value="Ssangyong/雙龍">Ssangyong/雙龍</option>
+                                    <option value="Toyota/豐田">Toyota/豐田</option>
+                                    <option value="Tesla/特斯拉">Tesla/特斯拉</option>
+                                    <option value="Volkswagen/福斯">Volkswagen/福斯</option>
+                                    <option value="Volvo/富豪">Volvo/富豪</option>
+                                    <option value="Other">其他未列出品牌</option>
                                 </select>
                             </div>
                             <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">車輛型號 *</label><input type="text" id="carModel" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none" placeholder="例如：GLC300"></div>
