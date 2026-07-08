@@ -758,25 +758,162 @@
                 <div class="w-full text-center">
                     <h3 class="text-4xl md:text-5xl font-black mb-3 italic uppercase tracking-wider">Online <span class="text-brand-primary">Booking</span></h3>
                     <p class="text-gray-400 font-light leading-relaxed max-w-4xl mx-auto text-sm md:text-base tracking-wide">
-                        歡迎使用 XHC-DESIGN 線上預約系統。請於下方依序選填您的愛車規格與頂級美研項目。
+                        極致工藝，專屬為您。請填寫以下資訊，我們的專員將盡快為您確認預約時段。
                     </p>
                 </div>
 
-                <div class="w-full bg-white rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-200">
-                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScfI2Hjfu2zwc7pWwC7MH5mU34bPz2WQC8Kt30u_m-H2JtMqg/viewform?embedded=true" 
-                            width="100%" 
-                            height="1000" 
-                            frameborder="0" 
-                            marginheight="0" 
-                            marginwidth="0"
-                            class="w-full bg-white block">
-                        載入中…
-                    </iframe>
-                </div>
+                <form id="xhcNativeForm" class="w-full bg-zinc-900/50 p-8 rounded-2xl border border-white/10 shadow-inner space-y-6">
+                    
+                    <input type="hidden" id="lineName" name="lineName" value="">
+                    <input type="hidden" id="lineId" name="lineId" value="">
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">車主姓名 *</label>
+                            <input type="text" id="custName" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors" placeholder="請輸入姓名">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">聯絡電話 *</label>
+                            <input type="tel" id="custPhone" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors" placeholder="09XX-XXX-XXX">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">車輛品牌 *</label>
+                            <select id="carBrand" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors appearance-none">
+                                <option value="" disabled selected>請選擇品牌...</option>
+                                <option value="Mercedes-Benz/賓士">Mercedes-Benz / 賓士</option>
+                                <option value="BMW/寶馬">BMW / 寶馬</option>
+                                <option value="Porsche/保時捷">Porsche / 保時捷</option>
+                                <option value="Audi/奧迪">Audi / 奧迪</option>
+                                <option value="Tesla/特斯拉">Tesla / 特斯拉</option>
+                                <option value="Lexus/凌志">Lexus / 凌志</option>
+                                <option value="Toyota/豐田">Toyota / 豐田</option>
+                                <option value="Other">其他 (請於車型備註)</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">車輛型號 *</label>
+                            <input type="text" id="carModel" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors" placeholder="例如：EQS450+">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">預約日期 *</label>
+                            <input type="date" id="bookDate" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors" style="color-scheme: dark;">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm text-brand-primary tracking-widest">進場時段 *</label>
+                            <select id="bookTime" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors appearance-none">
+                                <option value="" disabled selected>請選擇時段...</option>
+                                <option value="上午10:00">上午 10:00</option>
+                                <option value="上午11:00">上午 11:00</option>
+                                <option value="下午13:00">下午 13:00</option>
+                                <option value="下午15:00">下午 15:00</option>
+                                <option value="下午17:00">下午 17:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-4">
+                        <label class="text-sm text-brand-primary tracking-widest">預約主要服務 *</label>
+                        <select id="mainService" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none transition-colors appearance-none">
+                            <option value="" disabled selected>請選擇主要項目...</option>
+                            <option value="深層洗車">深層洗車保養</option>
+                            <option value="頂級車體鍍膜">頂級車體鍍膜</option>
+                            <option value="漆面美容修復">漆面美容修復 (大小美容)</option>
+                            <option value="車體包膜(TPU/PET)">車體包膜 (TPU/PET)</option>
+                        </select>
+                    </div>
+
+                    <div class="pt-6">
+                        <button type="submit" id="submitBtn" class="w-full bg-brand-primary hover:bg-brand-primary-light text-white font-bold py-4 rounded-xl tracking-widest transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(37,99,235,0.4)] flex justify-center items-center">
+                            <span>確認送出預約</span>
+                        </button>
+                    </div>
+                    
+                    <div id="formStatus" class="hidden text-center text-sm mt-4 font-medium tracking-wide"></div>
+
+                </form>
             </div>
         </div>
     </div>
 </section>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+    // 1. 初始化 LIFF，自動抓取 LINE 身分放入隱藏欄位
+    async function initializeLiff() {
+        try {
+            await liff.init({ liffId: "2010634688-4PX2Vuh8" });
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                // 成功抓取！悄悄放入剛才寫好的隱藏欄位中
+                document.getElementById('lineName').value = profile.displayName;
+                document.getElementById('lineId').value = profile.userId;
+            } else {
+                liff.login();
+            }
+        } catch (err) {
+            console.error("LIFF 載入失敗:", err);
+        }
+    }
+    initializeLiff();
+
+    // 2. 攔截表單送出，將資料送到您的 Google API
+    document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // 阻止網頁跳轉
+        
+        const btn = document.getElementById('submitBtn');
+        const statusText = document.getElementById('formStatus');
+        
+        // 改變按鈕狀態為讀取中
+        btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 資料傳送中...';
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        // 打包客人填寫的資料
+        const formData = {
+            name: document.getElementById('custName').value,
+            phone: document.getElementById('custPhone').value,
+            brand: document.getElementById('carBrand').value,
+            model: document.getElementById('carModel').value,
+            service: document.getElementById('mainService').value,
+            date: document.getElementById('bookDate').value,
+            time: document.getElementById('bookTime').value,
+            lineName: document.getElementById('lineName').value || '未透過LINE登入',
+            lineId: document.getElementById('lineId').value || '無'
+        };
+
+        // 這是您剛剛授權成功的 API 網址！
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyfNRe6M7KpE4F5HSSd_JL2jLspmnOPVAK-nM_KlrGnptXiiG-2__KldaMaqTLba_CR/exec";
+
+        // 發射資料到 Google 試算表
+        fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 成功後的華麗回饋
+            btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
+            btn.classList.remove('bg-brand-primary');
+            btn.classList.add('bg-green-600');
+            statusText.innerHTML = '已收到您的預約資訊，感謝您選擇 XHC-DESIGN。';
+            statusText.classList.remove('hidden', 'text-red-400');
+            statusText.classList.add('text-green-400');
+            
+            // 3秒後可選擇清空表單
+            setTimeout(() => document.getElementById('xhcNativeForm').reset(), 3000);
+        })
+        .catch(error => {
+            btn.innerHTML = '確認送出預約';
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            statusText.innerHTML = '傳送失敗，請稍後再試或直接聯繫官方 LINE。';
+            statusText.classList.remove('hidden');
+            statusText.classList.add('text-red-400');
+        });
+    });
+</script>
 
 <section id="contact" class="py-16">
     <div class="container mx-auto px-6">
