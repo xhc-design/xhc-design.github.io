@@ -825,8 +825,8 @@
                             </div>
 
                             <div class="space-y-2 md:col-span-2">
-                                <label class="text-sm text-gray-300 tracking-widest font-bold">3. 漆面美容與車體包膜</label>
-                                <select class="service-dropdown w-full bg-black/80 border border-gray-600 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="美容包膜">
+                                <label class="text-sm text-gray-300 tracking-widest font-bold">3. 漆面美容修復</label>
+                                <select class="service-dropdown w-full bg-black/80 border border-gray-600 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="美容修復">
                                     <option value="">(無/跳過)</option>
                                     <optgroup label="漆面美容修復">
                                         <option value="局部傷痕修復">局部傷痕修復 ($1,000 up)</option>
@@ -834,54 +834,44 @@
                                         <option value="80%大美容">80% 大美容 ($8,000)</option>
                                         <option value="鏡面拉皮美容">鏡面拉皮美容 ($15,000 up)</option>
                                     </optgroup>
-                                    <optgroup label="車體包膜 (TPU犀牛皮)">
-                                        <option value="TPU 全車透明保護膜">TPU 全車透明保護膜 ($60,000)</option>
-                                        <option value="TPU 迎風面保護膜">TPU 迎風面保護膜 ($25,000)</option>
-                                        <option value="TPU 引擎蓋透明膜">TPU 引擎蓋透明膜 ($8,000)</option>
-                                        <option value="改色 TPU 彩色膜">改色 TPU 彩色膜 ($70,000)</option>
-                                        <option value="大燈燈膜 (透明)">大燈燈膜 (透明) ($2,000)</option>
-                                        <option value="大燈燈膜 (淺燻黑)">大燈燈膜 (淺燻黑) ($2,000)</option>
-                                        <option value="大燈燈膜 (深燻黑)">大燈燈膜 (深燻黑) ($2,000)</option>
-                                    </optgroup>
-                                    <optgroup label="改色膜系列 (PET)">
-                                        <option value="PET 全車改色">PET 全車改色 ($40,000)</option>
-                                        <option value="PET 半車改色">PET 半車改色 ($25,000)</option>
-                                        <option value="PET 全車彩繪貼">PET 全車彩繪貼 ($35,000 up)</option>
-                                        <option value="PET 邊框黑化工程">PET 邊框黑化工程 ($5,000 up)</option>
-                                        <option value="PET 局部彩繪貼">PET 局部彩繪貼 ($2,500 up)</option>
-                                        <option value="PET 局部配件">PET 局部配件 ($1,000 up)</option>
-                                        <option value="PET 輪框彩貼(四顆)">PET 輪框彩貼(四顆) ($2,000)</option>
-                                    </optgroup>
                                 </select>
                             </div>
 
-                            <div class="md:col-span-2 pt-4 border-t border-white/10">
-                                <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold">4. 單項護理 / 局部鍍膜 (可多選)</label>
-                                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 text-sm text-gray-300">
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="除鐵粉 $300"><span class="mt-1">除鐵粉 $300</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="除柏油 $300"><span class="mt-1">除柏油 $300</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="除蟲屍清潔 $300"><span class="mt-1">除蟲屍 $300</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="玻璃除油墨 $500"><span class="mt-1">除油墨 $500</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="除臭除菌 $500"><span class="mt-1">除臭除菌 $500</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="蒸汽殺菌 $800"><span class="mt-1">蒸汽殺菌 $800</span></label>
+                            <div class="md:col-span-2 pt-6 border-t border-white/10">
+                                
+                                <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold">4. 單項護理項目 (可複選)</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm text-gray-300 mb-8">
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除鐵粉 $300"><span class="mt-1">除鐵粉 $300</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除柏油 $300"><span class="mt-1">除柏油 $300</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="皮革保養 $300"><span class="mt-1">皮革保養 $300</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除蟲屍清潔 $300"><span class="mt-1">除蟲屍清潔 $300</span></label>
                                     
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="皮革保養 $300"><span class="mt-1">皮革保養 $300</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="塑料還原 $1,000"><span class="mt-1">塑料還原 $1000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="引擎室清潔 $800"><span class="mt-1">引擎室清潔 $800</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="大燈修復 $3,000"><span class="mt-1">大燈修復 $3000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="內裝深層美容 $3,500"><span class="mt-1">內裝深美容 $3500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除臭除菌 $500"><span class="mt-1">除臭除菌 $500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="玻璃除油墨 $500"><span class="mt-1">玻璃除油墨 $500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="深層去汙蠟 $500"><span class="mt-1">深層去汙蠟 $500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="封體棕櫚蠟 $500"><span class="mt-1">封體棕櫚蠟 $500</span></label>
                                     
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="深層去汙蠟 $500"><span class="mt-1">深層去汙蠟 $500</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="封體棕櫚蠟 $500"><span class="mt-1">封體棕櫚蠟 $500</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="水晶棕櫚蠟 $800"><span class="mt-1">水晶棕櫚蠟 $800</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="全車玻璃鍍膜 $3,000"><span class="mt-1">全車玻璃鍍膜 $3000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="前後擋玻璃鍍膜 $2,000"><span class="mt-1">前後玻璃鍍膜 $2000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="輪框鍍膜(四顆) $2,000"><span class="mt-1">輪框鍍膜 $2000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="塑料件鍍膜 $2,000"><span class="mt-1">塑料件鍍膜 $2000</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="皮革鍍膜 $1,500"><span class="mt-1">皮革鍍膜 $1500</span></label>
-                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white text-brand-primary"><input type="checkbox" class="service-checkbox form-checkbox h-4 w-4 text-brand-primary rounded bg-black/50" value="引擎室鍍膜 $1,500"><span class="mt-1">引擎室鍍膜 $1500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="蒸汽殺菌 $800"><span class="mt-1">蒸汽殺菌 $800</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="水晶棕櫚蠟 $800"><span class="mt-1">水晶棕櫚蠟 $800</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="引擎室清潔(含清潔後保養) $800"><span class="mt-1">引擎室清潔(含保養) $800</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="塑料還原 $1,000"><span class="mt-1">塑料還原 $1,000</span></label>
+                                    
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="皮革鍍膜 $1,500"><span class="mt-1">皮革鍍膜 $1,500</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="大燈修復 $3,000"><span class="mt-1">大燈修復 $3,000</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="內裝深層美容 $3,500"><span class="mt-1">內裝深層美容 $3,500</span></label>
+                                </div>
+
+                                <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold border-t border-white/10 pt-6">5. 局部鍍膜項目 (可複選)</label>
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm text-brand-primary">
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="全車玻璃鍍膜 $3,000"><span class="mt-1">全車玻璃鍍膜 $3,000</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="前後擋玻璃鍍膜 $2,000"><span class="mt-1">前後擋玻璃鍍膜 $2,000</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="輪框鍍膜(四顆) $2,000"><span class="mt-1">輪框鍍膜(四顆) $2,000</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="塑料件鍍膜 $2,000"><span class="mt-1">塑料件鍍膜 $2,000</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="引擎室鍍膜 $1,500"><span class="mt-1">引擎室鍍膜 $1,500</span></label>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
                     <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -917,6 +907,170 @@
         </div>
     </div>
 </section>
+
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+    // 1. LIFF 初始化
+    async function initializeLiff() {
+        try {
+            await liff.init({ liffId: "2010634688-4PX2Vuh8" });
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                document.getElementById('lineName').value = profile.displayName;
+                document.getElementById('lineId').value = profile.userId;
+            } else { liff.login(); }
+        } catch (err) { console.error("LIFF Fail:", err); }
+    }
+    initializeLiff();
+
+    // 2. 核心價格資料庫
+    const pricingDB = {
+        wash: {
+            "快速洗車": { "轎車": 500, "休旅車": 800, "商務車": 1000, "加長型": 1000 },
+            "快速洗車(買10送1)": { "轎車": 5000, "休旅車": 8000, "商務車": 10000, "加長型": 10000 },
+            "精緻洗車": { "轎車": 800, "休旅車": 1000, "商務車": 1300, "加長型": 1300 },
+            "精緻洗車(買10送1)": { "轎車": 8000, "休旅車": 10000, "商務車": 13000, "加長型": 13000 },
+            "深層洗車": { "轎車": 1000, "休旅車": 1200, "商務車": 1500, "加長型": 1500 },
+            "深層洗車(買10送1)": { "轎車": 10000, "休旅車": 12000, "商務車": 15000, "加長型": 15000 },
+            "晶鑽洗車": { "轎車": 1500, "休旅車": 1700, "商務車": 2000, "加長型": 2000 },
+            "晶鑽洗車(買10送1)": { "轎車": 15000, "休旅車": 17000, "商務車": 20000, "加長型": 20000 }
+        },
+        coating: {
+            "GTECHNIQ CSL 英國白瓶": {
+                "一年期": { "轎車": 8000, "休旅車": 9000, "商務車": 10000, "加長型": 12000 },
+                "二年期": { "轎車": 18000, "休旅車": 19000, "商務車": 20000, "加長型": 22000 },
+                "三年期": { "轎車": 28000, "休旅車": 29000, "商務車": 30000, "加長型": 32000 }
+            },
+            "R-Pro 高性能石墨稀": {
+                "一年期": { "轎車": 10000, "休旅車": 11000, "商務車": 12000, "加長型": 14000 },
+                "二年期": { "轎車": 20000, "休旅車": 21000, "商務車": 22000, "加長型": 24000 },
+                "三年期": { "轎車": 30000, "休旅車": 31000, "商務車": 32000, "加長型": 34000 }
+            },
+            "3M 專利有機矽烷": {
+                "一年期": { "轎車": 12000, "休旅車": 13000, "商務車": 14000, "加長型": 16000 },
+                "二年期": { "轎車": 22000, "休旅車": 23000, "商務車": 24000, "加長型": 26000 },
+                "三年期": { "轎車": 32000, "休旅車": 33000, "商務車": 34000, "加長型": 36000 }
+            },
+            "GTECHNIQ CS 英國黑瓶": {
+                "一年期": { "轎車": 15000, "休旅車": 16000, "商務車": 17000, "加長型": 19000 },
+                "二年期": { "轎車": 25000, "休旅車": 26000, "商務車": 27000, "加長型": 29000 },
+                "三年期": { "轎車": 35000, "休旅車": 36000, "商務車": 37000, "加長型": 39000 }
+            },
+            "CCP 台灣雙劑型": {
+                "一年期": { "轎車": 16000, "休旅車": 17000, "商務車": 18000, "加長型": 20000 },
+                "二年期": { "轎車": 26000, "休旅車": 27000, "商務車": 28000, "加長型": 30000 },
+                "三年期": { "轎車": 36000, "休旅車": 37000, "商務車": 38000, "加長型": 40000 }
+            },
+            "Q-Glym 日本複合式": {
+                "一年期": { "轎車": 18000, "休旅車": 19000, "商務車": 20000, "加長型": 22000 },
+                "二年期": { "轎車": 28000, "休旅車": 29000, "商務車": 30000, "加長型": 32000 },
+                "三年期": { "轎車": 38000, "休旅車": 39000, "商務車": 40000, "加長型": 42000 }
+            }
+        }
+    };
+
+    const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // 3. 車型觸發與價格渲染
+    document.getElementById('carType').addEventListener('change', function() {
+        const type = this.value;
+        const washSelect = document.getElementById('washSelect');
+        const coatingSelect = document.getElementById('coatingSelect');
+        const section = document.getElementById('dynamicServiceSection');
+        const warning = document.getElementById('typeWarning');
+        
+        // UI 狀態切換
+        section.classList.remove('opacity-30', 'pointer-events-none');
+        warning.classList.add('hidden');
+        this.classList.remove('border-brand-primary');
+        this.classList.add('border-green-500', 'text-green-400');
+
+        // 生成洗車選單
+        washSelect.innerHTML = '<option value="">(無 / 現場討論)</option>';
+        let washGroup1 = '<optgroup label="單次洗車">';
+        let washGroup2 = '<optgroup label="買10送1 超值套裝">';
+        for (const [washName, prices] of Object.entries(pricingDB.wash)) {
+            const price = prices[type];
+            if(price) {
+                const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
+                if(washName.includes("買10送1")) washGroup2 += optHtml;
+                else washGroup1 += optHtml;
+            }
+        }
+        washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
+
+        // 生成鍍膜選單
+        coatingSelect.innerHTML = '<option value="">(無 / 跳過)</option>';
+        for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
+            let optgroup = `<optgroup label="${coatName}">`;
+            for (const [duration, prices] of Object.entries(durations)) {
+                const price = prices[type];
+                if(price) {
+                    optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                }
+            }
+            optgroup += `</optgroup>`;
+            coatingSelect.innerHTML += optgroup;
+        }
+    });
+
+    // 4. 表單提交攔截
+    document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '🔄 資料加密傳送中...';
+        btn.disabled = true;
+        btn.classList.add('opacity-75');
+
+        let selectedServices = [];
+        document.querySelectorAll('.service-dropdown').forEach(select => {
+            if(select.value) selectedServices.push(`[${select.dataset.label}] ${select.value}`);
+        });
+        document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
+            selectedServices.push(`[加購] ${cb.value}`);
+        });
+        const finalServiceString = selectedServices.length > 0 ? selectedServices.join(" , ") : "僅基本預約，現場安排";
+
+        const formData = {
+            name: document.getElementById('custName').value,
+            phone: document.getElementById('custPhone').value,
+            brand: document.getElementById('carBrand').value,
+            model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
+            service: finalServiceString + " | 車牌:" + document.getElementById('custPlate').value + " | 地址:" + (document.getElementById('custAddress').value || "無"),
+            date: document.getElementById('bookDate').value,
+            time: document.getElementById('bookTime').value,
+            lineName: document.getElementById('lineName').value || '未透過LINE登入',
+            lineId: document.getElementById('lineId').value || '無'
+        };
+
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyfNRe6M7KpE4F5HSSd_JL2jLspmnOPVAK-nM_KlrGnptXiiG-2__KldaMaqTLba_CR/exec";
+
+        fetch(GAS_URL, {
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(formData)
+        }).then(() => {
+            btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
+            btn.classList.replace('bg-brand-primary', 'bg-green-600');
+            const statusText = document.getElementById('formStatus');
+            statusText.innerHTML = '預約單已送出，感謝您選擇 XHC-DESIGN。';
+            statusText.classList.remove('hidden', 'text-red-400');
+            statusText.classList.add('text-green-400');
+            
+            setTimeout(() => { 
+                document.getElementById('xhcNativeForm').reset(); 
+                document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
+                document.getElementById('typeWarning').classList.remove('hidden');
+                document.getElementById('carType').classList.remove('border-green-500', 'text-green-400');
+                document.getElementById('carType').classList.add('border-brand-primary');
+                btn.innerHTML = '確認送出預約，取得專屬報價'; 
+                btn.disabled = false;
+                btn.classList.remove('bg-green-600', 'opacity-75');
+                btn.classList.add('bg-brand-primary');
+            }, 4000);
+        });
+    });
+</script>
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
