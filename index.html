@@ -902,5 +902,31 @@
 
         document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
     </script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<script>
+    async function initializeLiff() {
+        try {
+            await liff.init({ liffId: "2010634688-4PX2Vuh8" });
+            if (liff.isLoggedIn()) {
+                const profile = await liff.getProfile();
+                const userName = profile.displayName;
+                
+                // 改用這個寫法：確認 iframe 確實存在才進行操作
+                const iframe = document.querySelector('iframe');
+                if (iframe) {
+                    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLScfI2Hjfu2zwc7pWwC7MH5mU34bPz2WQC8Kt30u_m-H2JtMqg/viewform?embedded=true&usp=pp_url&entry.501867060=" + encodeURIComponent(userName);
+                    iframe.src = formUrl;
+                    console.log("LINE 身分已成功注入表單！");
+                }
+            } else {
+                // 如果沒登入，強制登入，確保體驗一致
+                liff.login();
+            }
+        } catch (err) {
+            console.error("LIFF 初始化失敗:", err);
+        }
+    }
+    initializeLiff();
+</script>	
 </body>
 </html>
