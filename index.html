@@ -11,7 +11,7 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#2563eb',       // 寶藍色 Royal Blue
+                            primary: '#2563eb',       
                             'primary-light': '#60a5fa', 
                             'primary-dark': '#1e3a8a',  
                             dark: '#050505',
@@ -84,7 +84,7 @@
             <div class="absolute inset-0 hero-gradient"></div>
         </div>
         <div class="relative z-10 text-center px-4 max-w-5xl animate-on-scroll mt-16">
-            <div class="inline-block px-4 py-1 border border-brand-primary text-brand-primary text-[10px] tracking-[0.4em] font-bold mb-6 rounded-full uppercase">XHC-DESIGN</div>
+            <div class="inline-block px-4 py-1 border border-brand-primary text-brand-primary text-[10px] tracking-[0.4em] font-bold mb-6 rounded-full uppercase drop-shadow-md">XHC-DESIGN</div>
             <h1 class="text-6xl md:text-9xl font-black mb-8 leading-[0.9] oswald italic uppercase drop-shadow-2xl">
                 2026 <span class="text-transparent bg-clip-text bg-gradient-to-b from-brand-primary to-brand-primary-dark">Evolution</span>
             </h1>
@@ -219,7 +219,7 @@
                                     <label class="text-sm text-brand-primary tracking-widest">車輛品牌 *</label>
                                     <select id="carBrand" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer">
                                         <option value="" disabled selected>請選擇品牌</option>
-                                        <option value="Audi/奧迪">Audi/奧迪</option><option value="BMW/寶馬">BMW/寶馬</option><option value="Mercedes-Benz/賓士">Mercedes-Benz/賓士</option><option value="Porsche/保時捷">Porsche/保時捷</option><option value="Tesla/特斯拉">Tesla/特斯拉</option><option value="Toyota/豐田">Toyota/豐田</option><option value="Lexus/凌志">Lexus/凌志</option><option value="McLaren/麥拉倫">McLaren/麥拉倫</option><option value="Other">其他品牌</option>
+                                        <option value="Audi/奧迪">Audi/奧迪</option><option value="BMW/寶馬">BMW/寶馬</option><option value="Mercedes-Benz/賓士">Mercedes-Benz/賓士</option><option value="Porsche/保時捷">Porsche/保時捷</option><option value="Tesla/特斯拉">Tesla/特斯拉</option><option value="Toyota/豐田">Toyota/豐田</option><option value="Lexus/凌志">Lexus/凌志</option><option value="Volvo/富豪">Volvo/富豪</option><option value="Other">其他品牌</option>
                                     </select>
                                 </div>
                                 <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">車輛型號 *</label><input type="text" id="carModel" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none" placeholder="例如：GLC300"></div>
@@ -313,7 +313,7 @@
                         </div>
 
                         <div class="pt-4">
-                            <button type="submit" id="submitBtn" class="w-full bg-brand-primary hover:bg-brand-primary-light text-white text-lg font-bold py-5 rounded-xl tracking-widest transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(37,99,235,0.4)] flex justify-center items-center">
+                            <button type="submit" id="submitBtn" class="w-full bg-brand-primary hover:bg-brand-primary-light text-white text-lg font-bold py-5 rounded-xl tracking-widest transition-all duration-300">
                                 <span>確認送出預約，取得專屬報價</span>
                             </button>
                         </div>
@@ -363,7 +363,7 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        // 1. LIFF 初始化與 LINE 身分靜態捕獲
+        // 1. LIFF 初始化
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: "2010634688-4PX2Vuh8" });
@@ -376,7 +376,7 @@
         }
         initializeLiff();
 
-        // 2. 2026 旗艦車型動態價格資料庫
+        // 2. 核心價格資料庫
         const pricingDB = {
             wash: {
                 "快速洗車": { "轎車": 500, "休旅車": 800, "商務車": 1000, "加長型": 1000 },
@@ -409,7 +409,7 @@
 
         const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-        // 3. 車型觸發與價格連動渲染
+        // 3. 動態下拉選單生成邏輯 (對齊：請選擇洗車方案、選填提示)
         document.getElementById('carType').addEventListener('change', function() {
             const type = this.value;
             const washSelect = document.getElementById('washSelect');
@@ -420,6 +420,7 @@
             section.classList.remove('opacity-30', 'pointer-events-none');
             if(warning) warning.classList.add('hidden');
 
+            // 修正 1：洗車預設字樣
             washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
             let washGroup1 = '<optgroup label="單次洗車">';
             let washGroup2 = '<optgroup label="買10送1 超值套裝">';
@@ -433,6 +434,7 @@
             }
             washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
 
+            // 修正 2：鍍膜預設字樣
             coatingSelect.innerHTML = '<option value="">選填</option>';
             for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
                 let optgroup = `<optgroup label="${coatName}">`;
@@ -447,43 +449,47 @@
             }
         });
 
-        // 4. API 異步串接打包發送
+        // 4. 表單攔截與資料封裝防漏引擎
         document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerHTML = '🔄 安全加密傳送中...';
+            btn.innerHTML = '🔄 資料加密傳送中...';
             btn.disabled = true;
-            btn.classList.add('opacity-50');
 
-            // 精確抓取網頁當下顯示的完整文字內容
+            const plate = document.getElementById('custPlate').value || '未填寫';
+            const address = document.getElementById('custAddress').value || '無';
+
+            // 防漏修正：精準抓取畫面的完整顯示文字
             let selectedServices = [];
             document.querySelectorAll('.service-dropdown').forEach(select => {
                 if(select.value && select.value !== "") {
                     const selectedText = select.options[select.selectedIndex].text;
-                    selectedServices.push(`${selectedText}`);
+                    selectedServices.push(`【${select.dataset.label}】${selectedText}`);
                 }
             });
             document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
                 selectedServices.push(`【加購】${cb.value}`);
             });
-            const finalServiceString = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
+            const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅基本預約，現場安排";
 
-            // 結構化封裝 JSON 欄位
+            // 防漏修正：優先把車牌與地址塞在欄位最前面，杜絕被切字
+            const finalServiceString = `[車牌: ${plate}] [地址: ${address}] || 方案: ${serviceItems}`;
+
             const formData = {
                 name: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
-                plate: document.getElementById('custPlate').value || '未填',       
-                address: document.getElementById('custAddress').value || '無',   
+                plate: plate,       
+                address: address,   
                 brand: document.getElementById('carBrand').value,
                 model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
                 service: finalServiceString, 
                 date: document.getElementById('bookDate').value,
                 time: document.getElementById('bookTime').value,
-                lineName: document.getElementById('lineName').value || '獨立瀏覽器環境',
+                lineName: document.getElementById('lineName').value || '未透過LINE登入',
                 lineId: document.getElementById('lineId').value || '無'
             };
 
-            // ⚠️ 部署提示：請將下方引號內的網址，更換成您在 Apps Script 控制中心發布的最新 /exec 網址 ⚠️
+            // ⚠️ 貼心提示：請在這裡貼上您最新部署成功的 Apps Script 網址 ⚠️
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
             fetch(GAS_URL, {
@@ -492,9 +498,8 @@
                 body: JSON.stringify(formData)
             }).then(() => {
                 btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
-                btn.classList.replace('bg-brand-primary', 'bg-green-600');
                 const statusText = document.getElementById('formStatus');
-                statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
+                statusText.innerHTML = '預約單已送出，感謝您選擇 XHC-DESIGN。';
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
                 
@@ -504,24 +509,18 @@
                     document.getElementById('typeWarning').classList.remove('hidden');
                     btn.innerHTML = '確認送出預約，取得專屬報價'; 
                     btn.disabled = false;
-                    btn.classList.remove('opacity-50', 'bg-green-600');
-                    btn.classList.add('bg-brand-primary');
                 }, 4000);
             }).catch(err => {
-                console.error("傳送故障:", err);
-                btn.innerHTML = '⚠️ 網路傳輸超時，請重試';
+                btn.innerHTML = '⚠️ 傳送失敗，請重試';
                 btn.disabled = false;
-                btn.classList.remove('opacity-50');
             });
         });
 
-        // 導覽列效果
+        // 導覽列與捲動監測效果
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
         });
-        
-        // 價格分頁切換
         function switchPricing(type) {
             const tabs = ['wash', 'coating', 'ppf', 'mods'];
             tabs.forEach(tab => {
@@ -530,11 +529,9 @@
                 if (tab === type) {
                     contentEl.classList.remove('hidden');
                     btnEl.classList.add('tab-active', 'text-brand-primary');
-                    btnEl.classList.remove('text-zinc-500');
                 } else {
                     contentEl.classList.add('hidden');
                     btnEl.classList.remove('tab-active', 'text-brand-primary');
-                    btnEl.classList.add('text-zinc-500');
                 }
             });
         }
