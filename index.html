@@ -447,7 +447,7 @@
             }
         });
 
-        // 4. API 異步串接打包發送 (升級：自動回傳 LINE 訊息通知)
+        // 4. API 異步串接打包發送
         document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -455,7 +455,6 @@
             btn.disabled = true;
             btn.classList.add('opacity-50');
 
-            // 精確抓取網頁當下顯示的完整文字內容
             let selectedServices = [];
             document.querySelectorAll('.service-dropdown').forEach(select => {
                 if(select.value && select.value !== "") {
@@ -468,7 +467,6 @@
             });
             const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
 
-            // 結構化封裝 JSON 欄位
             const formData = {
                 name: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
@@ -483,7 +481,6 @@
                 lineId: document.getElementById('lineId').value || '無'
             };
 
-            // 您的全新 Google Apps Script 執行網址
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
             fetch(GAS_URL, {
@@ -498,7 +495,6 @@
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
 
-                // 🏎️ 🌟 CTO 核心升級：自動利用 LIFF 傳送完整通知訊息給客戶與後台
                 if (liff.isLoggedIn() && liff.isInClient()) {
                     const lineNotificationText = 
                         `🏎️【XHC-DESIGN】預約成功通知\n\n` +
@@ -543,26 +539,30 @@
             });
         });
 
-        // 導覽列效果
+        // 5. 導覽列效果
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
         });
         
-        // 價格分頁切換
+        // 6. 價格分頁切換 (已正確移至最外層)
         function switchPricing(type) {
             const tabs = ['wash', 'coating', 'ppf', 'mods'];
             tabs.forEach(tab => {
                 const contentEl = document.getElementById(`pricing-${tab}`);
                 const btnEl = document.getElementById(`tab-${tab}`);
                 if (tab === type) {
-                    contentEl.classList.remove('hidden');
-                    btnEl.classList.add('tab-active', 'text-brand-primary');
-                    btnEl.classList.remove('text-zinc-500');
+                    if (contentEl) contentEl.classList.remove('hidden');
+                    if (btnEl) {
+                        btnEl.classList.add('tab-active', 'text-brand-primary');
+                        btnEl.classList.remove('text-zinc-500');
+                    }
                 } else {
-                    contentEl.classList.add('hidden');
-                    btnEl.classList.remove('tab-active', 'text-brand-primary');
-                    btnEl.classList.add('text-zinc-500');
+                    if (contentEl) contentEl.classList.add('hidden');
+                    if (btnEl) {
+                        btnEl.classList.remove('tab-active', 'text-brand-primary');
+                        btnEl.classList.add('text-zinc-500');
+                    }
                 }
             });
         }
