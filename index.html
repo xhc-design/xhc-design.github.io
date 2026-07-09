@@ -102,10 +102,7 @@
                     <h3 class="text-4xl md:text-5xl font-black italic">XHC 旗艦專業價目表</h3>
                 </div>
                 <div class="flex flex-wrap gap-4 text-sm font-bold oswald tracking-widest border-b border-zinc-800 pb-2 w-full xl:w-auto">
-                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button>
-                    <button onclick="switchPricing('coating')" id="tab-coating" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">鍍膜項目 <span class="text-[10px] block opacity-60 font-normal">Coating</span></button>
-                    <button onclick="switchPricing('ppf')" id="tab-ppf" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">包膜項目 <span class="text-[10px] block opacity-60 font-normal">PPF & Wraps</span></button>
-                    <button onclick="switchPricing('mods')" id="tab-mods" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">改裝項目 <span class="text-[10px] block opacity-60 font-normal">Mods & Detail</span></button>
+                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button> <button onclick="switchPricing('coating')" id="tab-coating" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">鍍膜項目 <span class="text-[10px] block opacity-60 font-normal">Coating</span></button> <button onclick="switchPricing('ppf')" id="tab-ppf" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">包膜項目 <span class="text-[10px] block opacity-60 font-normal">PPF & Wraps</span></button> <button onclick="switchPricing('mods')" id="tab-mods" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">改裝項目 <span class="text-[10px] block opacity-60 font-normal">Mods & Detail</span></button>
                 </div>
             </div>
 
@@ -187,11 +184,11 @@
         <div class="container mx-auto px-6 relative z-10 text-center">
             <h4 class="text-2xl font-bold text-white tracking-widest mb-8">Follow @xhc_design</h4>
             <script src="https://elfsightcdn.com/platform.js" async></script>
-            <div class="elfsight-app-00cc41ac-f9f2-4558-aeac-8ceb1c1d45e8" data-elfsight-app-lazy></div>
+            <div class="elfsight-app-00cc41ac-f9f2-4558-aeac-8ceb1c1d45e8" data-sight-app-lazy></div>
         </div>
     </section>
 
-    <!-- 預約區塊 (確保緊跟在後面，中間沒有雜訊) -->
+    <!-- 預約區塊 -->
     <section id="booking" class="py-16 bg-black/10">
         <div class="container mx-auto px-6">
             <div class="max-w-6xl mx-auto glass-card p-6 md:p-12 relative overflow-hidden border border-brand-primary/20 rounded-2xl shadow-2xl">
@@ -326,6 +323,7 @@
         </div>
     </section>
 
+    <!-- 聯絡區塊 -->
     <section id="contact" class="py-16">
         <div class="container mx-auto px-6">
             <div class="max-w-6xl mx-auto glass-card p-12 md:p-20 relative overflow-hidden border border-brand-primary/20 rounded-2xl shadow-2xl">
@@ -356,6 +354,7 @@
         </div>
     </section>
 
+    <!-- 頁尾 -->
     <footer class="py-20 border-t border-brand-primary/20 bg-black">
         <div class="container mx-auto px-6 text-center">
             <span class="oswald text-6xl font-black text-brand-primary tracking-tighter">XHC</span>
@@ -363,29 +362,28 @@
         </div>
     </footer>
 
+    <!-- JavaScript 邏輯庫 (完整閉合修正版) -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        // 1. LIFF 初始化 (修正一般瀏覽器開啟會卡住的問題)
-async function initializeLiff() {
-    try {
-        await liff.init({ liffId: "2010634688-4PX2Vuh8" });
-        if (liff.isLoggedIn()) {
-            const profile = await liff.getProfile();
-            document.getElementById('lineName').value = profile.displayName;
-            document.getElementById('lineId').value = profile.userId;
-        } else { 
-            // 如果是在 LINE 瀏覽器內才強制登入，一般瀏覽器則允許觀看
-            if (liff.isInClient()) {
-                liff.login();
-            } else {
-                console.log("目前處於一般瀏覽器環境，未登入 LINE");
-            }
+        // 1. LIFF 初始化 (修正非 LINE 瀏覽器開啟時會強制卡死網頁登入的 bug)
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: "2010634688-4PX2Vuh8" });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    document.getElementById('lineName').value = profile.displayName;
+                    document.getElementById('lineId').value = profile.userId;
+                } else { 
+                    // 只有在 LINE App 內部開啟才自動強制導向登入，外部瀏覽器不阻斷
+                    if (liff.isInClient()) {
+                        liff.login(); 
+                    } else {
+                        console.log("當前為外部瀏覽器，允許訪客模式瀏覽。");
+                    }
+                }
+            } catch (err) { console.error("LIFF 載入失敗:", err); }
         }
-    } catch (err) { 
-        console.error("LIFF 載入失敗，但網頁仍可正常運作:", err); 
-    }
-}
-initializeLiff();
+        initializeLiff();
 
         // 2. 2026 旗艦車型動態價格資料庫
         const pricingDB = {
@@ -428,37 +426,41 @@ initializeLiff();
             const section = document.getElementById('dynamicServiceSection');
             const warning = document.getElementById('typeWarning');
             
-            section.classList.remove('opacity-30', 'pointer-events-none');
+            if(section) section.classList.remove('opacity-30', 'pointer-events-none');
             if(warning) warning.classList.add('hidden');
 
-            washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
-            let washGroup1 = '<optgroup label="單次洗車">';
-            let washGroup2 = '<optgroup label="買10送1 超值套裝">';
-            for (const [washName, prices] of Object.entries(pricingDB.wash)) {
-                const price = prices[type];
-                if(price) {
-                    const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
-                    if(washName.includes("買10送1")) washGroup2 += optHtml;
-                    else washGroup1 += optHtml;
-                }
-            }
-            washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
-
-            coatingSelect.innerHTML = '<option value="">選填</option>';
-            for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
-                let optgroup = `<optgroup label="${coatName}">`;
-                for (const [duration, prices] of Object.entries(durations)) {
+            if(washSelect) {
+                washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
+                let washGroup1 = '<optgroup label="單次洗車">';
+                let washGroup2 = '<optgroup label="買10送1 超值套裝">';
+                for (const [washName, prices] of Object.entries(pricingDB.wash)) {
                     const price = prices[type];
                     if(price) {
-                        optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                        const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
+                        if(washName.includes("買10送1")) washGroup2 += optHtml;
+                        else washGroup1 += optHtml;
                     }
                 }
-                optgroup += `</optgroup>`;
-                coatingSelect.innerHTML += optgroup;
+                washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
+            }
+
+            if(coatingSelect) {
+                coatingSelect.innerHTML = '<option value="">選填</option>';
+                for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
+                    let optgroup = `<optgroup label="${coatName}">`;
+                    for (const [duration, prices] of Object.entries(durations)) {
+                        const price = prices[type];
+                        if(price) {
+                            optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                        }
+                    }
+                    optgroup += `</optgroup>`;
+                    coatingSelect.innerHTML += optgroup;
+                }
             }
         });
 
-        // 4. API 異步串接打包發送
+        // 4. API 異步串接打包發送 
         document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
@@ -502,9 +504,11 @@ initializeLiff();
                 btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
                 btn.classList.replace('bg-brand-primary', 'bg-green-600');
                 const statusText = document.getElementById('formStatus');
-                statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
-                statusText.classList.remove('hidden');
-                statusText.classList.add('text-green-400');
+                if (statusText) {
+                    statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
+                    statusText.classList.remove('hidden');
+                    statusText.classList.add('text-green-400');
+                }
 
                 if (liff.isLoggedIn() && liff.isInClient()) {
                     const lineNotificationText = 
@@ -521,7 +525,7 @@ initializeLiff();
                         `⏰ 進場時段：${formData.time}\n` +
                         `🛠️ 預約方案：\n${serviceItems}\n` +
                         `━━━━━━━━━━━━━━━━━\n` +
-                        `後台專員已同步收到排程，我們將盡快與您聯繫确认施工細節！`;
+                        `後台專員已同步收到排程，我們將盡快與您聯繫確認施工細節！`;
 
                     liff.sendMessages([{
                         type: 'text',
@@ -529,14 +533,14 @@ initializeLiff();
                     }]).then(() => {
                         console.log("LINE 預約通知自動發送成功！");
                     }).catch((err) => {
-                        console.error("LINE 訊息發送失敗，請檢查 LINE Developer 權限:", err);
+                        console.error("LINE 訊息發送失敗:", err);
                     });
                 }
                 
                 setTimeout(() => { 
                     document.getElementById('xhcNativeForm').reset(); 
-                    document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
-                    document.getElementById('typeWarning').classList.remove('hidden');
+                    if(document.getElementById('dynamicServiceSection')) document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
+                    if(document.getElementById('typeWarning')) document.getElementById('typeWarning').classList.remove('hidden');
                     btn.innerHTML = '確認送出預約，取得專屬報價'; 
                     btn.disabled = false;
                     btn.classList.remove('opacity-50', 'bg-green-600');
@@ -553,10 +557,10 @@ initializeLiff();
         // 5. 導覽列效果
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
-            navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+            if(navbar) navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
         });
         
-        // 6. 價格分頁切換 (已正確移至最外層)
+        // 6. 價格分頁切換
         function switchPricing(type) {
             const tabs = ['wash', 'coating', 'ppf', 'mods'];
             tabs.forEach(tab => {
