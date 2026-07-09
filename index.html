@@ -35,7 +35,7 @@
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease-in-out;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
             overflow: hidden;
         }
         .glass-card:hover {
@@ -56,16 +56,25 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid rgba(37, 99, 235, 0.3);
         }
-        /* 🚨 核心漏洞修復：取消預設不穩定隱形，改為100%安全顯示，僅保留柔和流暢度 */
-        .animate-on-scroll { opacity: 1 !important; transform: none !important; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInOpacity {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-on-scroll { opacity: 1; } /* 調整預設可見，避免未觸發捲動動畫時內容全空 */
+        .animated { animation: fadeInUp 0.8s ease-out forwards; }
+        .animate-fade-in { animation: fadeInOpacity 0.4s ease-out forwards; }
         .tab-active { color: #2563eb; border-bottom: 2px solid #2563eb; }
     </style>
 </head>
 <body class="carbon-pattern">
 
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 px-6 md:px-12 py-8 flex justify-between items-center nav-scrolled">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 px-6 md:px-12 py-8 flex justify-between items-center">
         <div class="flex items-center group cursor-pointer" onclick="window.scrollTo(0,0)">
-            <span class="oswald text-2xl md:text-3xl font-bold text-brand-primary tracking-widest drop-shadow-[0_0_10px_rgba(37,99,235,0.5)]">XHC DESIGN</span>
+            <span class="oswald text-2xl md:text-3xl font-bold text-brand-primary tracking-widest drop-shadow-[0_0_10px_rgba(37,99,235,0.5)] transition-all group-hover:brightness-125">XHC DESIGN</span>
         </div>
     </nav>
 
@@ -74,7 +83,7 @@
             <img src="img/hero-banner.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1605810730453-6250bce2d4a1?auto=format&fit=crop&q=80&w=2000';" alt="頂級車體鍍膜實景" class="w-full h-full object-cover opacity-50">
             <div class="absolute inset-0 hero-gradient"></div>
         </div>
-        <div class="relative z-10 text-center px-4 max-w-5xl mt-16">
+        <div class="relative z-10 text-center px-4 max-w-5xl animate-on-scroll mt-16">
             <div class="inline-block px-4 py-1 border border-brand-primary text-brand-primary text-[10px] tracking-[0.4em] font-bold mb-6 rounded-full uppercase">XHC-DESIGN</div>
             <h1 class="text-6xl md:text-9xl font-black mb-8 leading-[0.9] oswald italic uppercase drop-shadow-2xl">
                 2026 <span class="text-transparent bg-clip-text bg-gradient-to-b from-brand-primary to-brand-primary-dark">Evolution</span>
@@ -92,15 +101,15 @@
                     <h2 class="oswald text-brand-primary font-bold tracking-[0.4em] mb-2 uppercase">Pricing Hub 2026</h2>
                     <h3 class="text-4xl md:text-5xl font-black italic">XHC 旗艦專業價目表</h3>
                 </div>
-                <div class="flex flex-wrap gap-4 text-sm font-bold oswald tracking-widest border-b border-zinc-800 pb-2 w-full xl:w-auto z-10">
-                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase text-brand-primary">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button>
+                <div class="flex flex-wrap gap-4 text-sm font-bold oswald tracking-widest border-b border-zinc-800 pb-2 w-full xl:w-auto">
+                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button>
                     <button onclick="switchPricing('coating')" id="tab-coating" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">鍍膜項目 <span class="text-[10px] block opacity-60 font-normal">Coating</span></button>
                     <button onclick="switchPricing('ppf')" id="tab-ppf" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">包膜項目 <span class="text-[10px] block opacity-60 font-normal">PPF & Wraps</span></button>
                     <button onclick="switchPricing('mods')" id="tab-mods" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">改裝項目 <span class="text-[10px] block opacity-60 font-normal">Mods & Detail</span></button>
                 </div>
             </div>
 
-            <div id="pricing-wash" class="block">
+            <div id="pricing-wash" class="animate-fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     <div class="glass-card p-8 flex flex-col justify-between group">
                         <div><h4 class="text-2xl font-bold mb-4 text-white">快速洗車</h4><p class="text-gray-400 text-sm mb-6 min-h-[60px]">基礎外觀清洗，適合日常維持漆面整潔。</p></div>
@@ -137,7 +146,7 @@
                 </div>
             </div>
 
-            <div id="pricing-coating" class="hidden space-y-8">
+            <div id="pricing-coating" class="hidden animate-fade-in space-y-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="glass-card p-8 rounded-sm">
                         <h4 class="text-lg font-bold text-white mb-4 border-l-4 border-brand-primary pl-3">1. GTECHNIQ CSL 英國白瓶陶瓷鍍膜</h4>
@@ -145,61 +154,4 @@
                             <tbody class="text-sm">
                                 <tr class="border-b border-white/5"><td class="py-2 text-white">一年期</td><td class="py-2 text-right">$8,000</td><td class="py-2 text-right">$9,000</td><td class="py-2 text-right">$10,000</td><td class="py-2 text-right">$12,000</td></tr>
                                 <tr class="border-b border-white/5"><td class="py-2 text-white">二年期</td><td class="py-2 text-right">$18,000</td><td class="py-2 text-right">$19,000</td><td class="py-2 text-right">$20,000</td><td class="py-2 text-right">$22,000</td></tr>
-                                <tr><td class="py-2 text-white">三年期</td><td class="py-2 text-right font-bold">$28,000</td><td class="py-2 text-right font-bold">$29,000</td><td class="py-2 text-right font-bold">$30,000</td><td class="py-2 text-right font-bold">$32,000</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="glass-card p-8 rounded-sm">
-                        <h4 class="text-lg font-bold text-brand-primary-light mb-4 border-l-4 border-brand-primary pl-3">2. R-Pro 高性能石墨烯鍍膜</h4>
-                        <table class="w-full text-left min-w-[450px]">
-                            <tbody class="text-sm">
-                                <tr class="border-b border-white/5"><td class="py-2 text-white">一年期</td><td class="py-2 text-right">$10,000</td><td class="py-2 text-right">$11,000</td><td class="py-2 text-right">$12,000</td><td class="py-2 text-right">$14,000</td></tr>
-                                <tr class="border-b border-white/5"><td class="py-2 text-white">二年期</td><td class="py-2 text-right">$20,000</td><td class="py-2 text-right">$21,000</td><td class="py-2 text-right">$22,000</td><td class="py-2 text-right">$24,000</td></tr>
-                                <tr><td class="py-2 text-white">三年期</td><td class="py-2 text-right font-bold">$30,000</td><td class="py-2 text-right font-bold">$31,000</td><td class="py-2 text-right font-bold">$32,000</td><td class="py-2 text-right font-bold">$34,000</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="pricing-ppf" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">1. 犀牛皮系列 TPU</h4><p class="text-sm text-gray-400">全車透明保護膜：$60,000 起</p></div>
-                <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">2. 改色膜系列 PET</h4><p class="text-sm text-gray-400">全車改色膜：$40,000 起</p></div>
-            </div>
-
-            <div id="pricing-mods" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">車內外改裝工程</h4><p class="text-gray-400 text-sm">星空燈頂棚、氣氛燈工程、黑化外觀升級面議。</p></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="instagram" class="py-24 bg-black border-t border-b border-brand-primary/20 relative overflow-hidden">
-        <div class="container mx-auto px-6 relative z-10 text-center">
-            <h4 class="text-2xl font-bold text-white tracking-widest mb-8">Follow @xhc_design</h4>
-            <script src="https://elfsightcdn.com/platform.js" async></script>
-            <div class="elfsight-app-00cc41ac-f9f2-4558-aeac-8ceb1c1d45e8" data-elfsight-app-lazy></div>
-        </div>
-    </section>
-
-    <section id="booking" class="py-16 bg-black/10">
-        <div class="container mx-auto px-6">
-            <div class="max-w-6xl mx-auto glass-card p-6 md:p-12 relative overflow-hidden border border-brand-primary/20 rounded-2xl shadow-2xl">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
-                
-                <div class="flex flex-col gap-8 relative z-10">
-                    <div class="w-full text-center">
-                        <h3 class="text-4xl md:text-5xl font-black mb-3 italic uppercase tracking-wider">Booking <span class="text-brand-primary">2026</span></h3>
-                        <p class="text-gray-400 font-light leading-relaxed max-w-4xl mx-auto text-sm md:text-base tracking-wide">
-                            極致工藝，定義您的用車美學。請先選擇您的車型級距，系統將自動為您展開專屬的精準報價。
-                        </p>
-                    </div>
-
-                    <form id="xhcNativeForm" class="w-full space-y-8">
-                        <input type="hidden" id="lineName" value="">
-                        <input type="hidden" id="lineId" value="">
-
-                        <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner space-y-6">
-                            <h4 class="text-xl font-bold text-white border-b border-white/10 pb-4 mb-4 flex items-center"><span class="w-2 h-6 bg-brand-primary mr-3 rounded-full"></span>車主與車型設定</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">車主姓名 *</label><input type="text" id="custName" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none"></div>
-                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">聯絡電話 *</label><input type="tel" id="custPhone" required class="w-full bg-black/50 border border-white/
+                                <tr><td class="py-2 text-white">三年期</td><td class="py-2 text-right font-bold">$28,000</td><td class="py-2 text-right font-bold">$29,000</td><td class="py-2 text-right font-bold">$30,000</td><td class="py-2 text-right
