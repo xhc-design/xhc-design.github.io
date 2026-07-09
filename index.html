@@ -365,18 +365,27 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script>
-        // 1. LIFF 初始化與 LINE 身分靜態捕獲
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: "2010634688-4PX2Vuh8" });
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    document.getElementById('lineName').value = profile.displayName;
-                    document.getElementById('lineId').value = profile.userId;
-                } else { liff.login(); }
-            } catch (err) { console.error("LIFF 載入失敗:", err); }
+        // 1. LIFF 初始化 (修正一般瀏覽器開啟會卡住的問題)
+async function initializeLiff() {
+    try {
+        await liff.init({ liffId: "2010634688-4PX2Vuh8" });
+        if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            document.getElementById('lineName').value = profile.displayName;
+            document.getElementById('lineId').value = profile.userId;
+        } else { 
+            // 如果是在 LINE 瀏覽器內才強制登入，一般瀏覽器則允許觀看
+            if (liff.isInClient()) {
+                liff.login();
+            } else {
+                console.log("目前處於一般瀏覽器環境，未登入 LINE");
+            }
         }
-        initializeLiff();
+    } catch (err) { 
+        console.error("LIFF 載入失敗，但網頁仍可正常運作:", err); 
+    }
+}
+initializeLiff();
 
         // 2. 2026 旗艦車型動態價格資料庫
         const pricingDB = {
