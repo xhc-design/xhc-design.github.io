@@ -35,7 +35,7 @@
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.3s ease-in-out;
             overflow: hidden;
         }
         .glass-card:hover {
@@ -56,25 +56,16 @@
             padding-bottom: 0.75rem;
             border-bottom: 1px solid rgba(37, 99, 235, 0.3);
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInOpacity {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-on-scroll { opacity: 0; }
-        .animated { animation: fadeInUp 0.8s ease-out forwards; }
-        .animate-fade-in { animation: fadeInOpacity 0.4s ease-out forwards; }
+        /* 🚨 核心漏洞修復：取消預設不穩定隱形，改為100%安全顯示，僅保留柔和流暢度 */
+        .animate-on-scroll { opacity: 1 !important; transform: none !important; }
         .tab-active { color: #2563eb; border-bottom: 2px solid #2563eb; }
     </style>
 </head>
 <body class="carbon-pattern">
 
-    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 px-6 md:px-12 py-8 flex justify-between items-center">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 px-6 md:px-12 py-8 flex justify-between items-center nav-scrolled">
         <div class="flex items-center group cursor-pointer" onclick="window.scrollTo(0,0)">
-            <span class="oswald text-2xl md:text-3xl font-bold text-brand-primary tracking-widest drop-shadow-[0_0_10px_rgba(37,99,235,0.5)] transition-all group-hover:brightness-125">XHC DESIGN</span>
+            <span class="oswald text-2xl md:text-3xl font-bold text-brand-primary tracking-widest drop-shadow-[0_0_10px_rgba(37,99,235,0.5)]">XHC DESIGN</span>
         </div>
     </nav>
 
@@ -83,7 +74,7 @@
             <img src="img/hero-banner.jpg" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1605810730453-6250bce2d4a1?auto=format&fit=crop&q=80&w=2000';" alt="頂級車體鍍膜實景" class="w-full h-full object-cover opacity-50">
             <div class="absolute inset-0 hero-gradient"></div>
         </div>
-        <div class="relative z-10 text-center px-4 max-w-5xl animate-on-scroll mt-16">
+        <div class="relative z-10 text-center px-4 max-w-5xl mt-16">
             <div class="inline-block px-4 py-1 border border-brand-primary text-brand-primary text-[10px] tracking-[0.4em] font-bold mb-6 rounded-full uppercase">XHC-DESIGN</div>
             <h1 class="text-6xl md:text-9xl font-black mb-8 leading-[0.9] oswald italic uppercase drop-shadow-2xl">
                 2026 <span class="text-transparent bg-clip-text bg-gradient-to-b from-brand-primary to-brand-primary-dark">Evolution</span>
@@ -96,20 +87,20 @@
 
     <section id="pricing" class="py-32 bg-zinc-950/50">
         <div class="container mx-auto px-6 max-w-7xl">
-            <div class="flex flex-col xl:flex-row items-end justify-between mb-16 space-y-8 xl:space-y-0 animate-on-scroll">
+            <div class="flex flex-col xl:flex-row items-end justify-between mb-16 space-y-8 xl:space-y-0">
                 <div>
                     <h2 class="oswald text-brand-primary font-bold tracking-[0.4em] mb-2 uppercase">Pricing Hub 2026</h2>
                     <h3 class="text-4xl md:text-5xl font-black italic">XHC 旗艦專業價目表</h3>
                 </div>
-                <div class="flex flex-wrap gap-4 text-sm font-bold oswald tracking-widest border-b border-zinc-800 pb-2 w-full xl:w-auto">
-                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button>
+                <div class="flex flex-wrap gap-4 text-sm font-bold oswald tracking-widest border-b border-zinc-800 pb-2 w-full xl:w-auto z-10">
+                    <button onclick="switchPricing('wash')" id="tab-wash" class="tab-active transition px-4 py-2 uppercase text-brand-primary">洗車項目 <span class="text-[10px] block opacity-60 font-normal">Washing</span></button>
                     <button onclick="switchPricing('coating')" id="tab-coating" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">鍍膜項目 <span class="text-[10px] block opacity-60 font-normal">Coating</span></button>
                     <button onclick="switchPricing('ppf')" id="tab-ppf" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">包膜項目 <span class="text-[10px] block opacity-60 font-normal">PPF & Wraps</span></button>
                     <button onclick="switchPricing('mods')" id="tab-mods" class="text-zinc-500 hover:text-white transition px-4 py-2 uppercase">改裝項目 <span class="text-[10px] block opacity-60 font-normal">Mods & Detail</span></button>
                 </div>
             </div>
 
-            <div id="pricing-wash" class="animate-fade-in">
+            <div id="pricing-wash" class="block">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     <div class="glass-card p-8 flex flex-col justify-between group">
                         <div><h4 class="text-2xl font-bold mb-4 text-white">快速洗車</h4><p class="text-gray-400 text-sm mb-6 min-h-[60px]">基礎外觀清洗，適合日常維持漆面整潔。</p></div>
@@ -146,7 +137,7 @@
                 </div>
             </div>
 
-            <div id="pricing-coating" class="hidden animate-fade-in space-y-8">
+            <div id="pricing-coating" class="hidden space-y-8">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="glass-card p-8 rounded-sm">
                         <h4 class="text-lg font-bold text-white mb-4 border-l-4 border-brand-primary pl-3">1. GTECHNIQ CSL 英國白瓶陶瓷鍍膜</h4>
@@ -171,12 +162,12 @@
                 </div>
             </div>
 
-            <div id="pricing-ppf" class="hidden animate-fade-in grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="pricing-ppf" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">1. 犀牛皮系列 TPU</h4><p class="text-sm text-gray-400">全車透明保護膜：$60,000 起</p></div>
                 <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">2. 改色膜系列 PET</h4><p class="text-sm text-gray-400">全車改色膜：$40,000 起</p></div>
             </div>
 
-            <div id="pricing-mods" class="hidden animate-fade-in grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div id="pricing-mods" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div class="glass-card p-8"><h4 class="text-2xl font-bold mb-4">車內外改裝工程</h4><p class="text-gray-400 text-sm">星空燈頂棚、氣氛燈工程、黑化外觀升級面議。</p></div>
             </div>
         </div>
@@ -211,333 +202,4 @@
                             <h4 class="text-xl font-bold text-white border-b border-white/10 pb-4 mb-4 flex items-center"><span class="w-2 h-6 bg-brand-primary mr-3 rounded-full"></span>車主與車型設定</h4>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">車主姓名 *</label><input type="text" id="custName" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none"></div>
-                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">聯絡電話 *</label><input type="tel" id="custPhone" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none"></div>
-                                <div class="space-y-2"><label class="text-sm text-gray-400 tracking-widest">車牌號碼 *</label><input type="text" id="custPlate" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none"></div>
-                                <div class="space-y-2"><label class="text-sm text-gray-400 tracking-widest">牽交車地址 (限雙北/選填)</label><input type="text" id="custAddress" class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none"></div>
-                                
-                                <div class="space-y-2">
-                                    <label class="text-sm text-brand-primary tracking-widest">車輛品牌 *</label>
-                                    <select id="carBrand" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer">
-                                        <option value="" disabled selected>請選擇品牌</option>
-                                        <option value="Audi/奧迪">Audi/奧迪</option><option value="BMW/寶馬">BMW/寶馬</option><option value="Mercedes-Benz/賓士">Mercedes-Benz/賓士</option><option value="Porsche/保時捷">Porsche/保時捷</option><option value="Tesla/特斯拉">Tesla/特斯拉</option><option value="Toyota/豐田">Toyota/豐田</option><option value="Lexus/凌志">Lexus/凌志</option><option value="McLaren/麥拉倫">McLaren/麥拉倫</option><option value="Other">其他品牌</option>
-                                    </select>
-                                </div>
-                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">車輛型號 *</label><input type="text" id="carModel" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none" placeholder="例如：GLC300"></div>
-                                
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="text-sm text-white font-bold tracking-widest bg-brand-primary px-3 py-1 rounded inline-block mb-1">請選擇車型級距 *</label>
-                                    <select id="carType" required class="w-full bg-black border-2 border-brand-primary rounded-lg p-4 text-white text-lg font-bold focus:ring-2 focus:ring-brand-primary outline-none appearance-none cursor-pointer">
-                                        <option value="" disabled selected>請選擇車型級距</option>
-                                        <option value="轎車">轎車</option><option value="休旅車">休旅車/旅行車</option><option value="商務車">商務車</option><option value="加長型">加長型</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner space-y-6">
-                            <h4 class="text-xl font-bold text-white border-b border-white/10 pb-4 mb-4 flex items-center"><span class="w-2 h-6 bg-brand-primary mr-3 rounded-full"></span>專屬服務配置清單</h4>
-                            <p id="typeWarning" class="text-brand-primary text-sm font-bold mb-4 animate-pulse">⚠️ 請先於上方選擇「車型級距」解鎖報價。</p>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-30 pointer-events-none transition-all duration-500" id="dynamicServiceSection">
-                                
-                                <div class="space-y-2">
-                                    <label class="text-sm text-gray-300 tracking-widest font-bold">1. 洗車護理方案</label>
-                                    <select id="washSelect" class="service-dropdown w-full bg-black/80 border border-gray-600 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="洗車">
-                                        <option value="">請選擇洗車方案</option>
-                                    </select>
-                                </div>
-
-                                <div class="space-y-2">
-                                    <label class="text-sm text-gray-300 tracking-widest font-bold">2. 頂級車體鍍膜</label>
-                                    <select id="coatingSelect" class="service-dropdown w-full bg-black/80 border border-gray-600 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="鍍膜">
-                                        <option value="">選填</option>
-                                    </select>
-                                </div>
-
-                                <div class="space-y-2 md:col-span-2">
-                                    <label class="text-sm text-gray-300 tracking-widest font-bold">3. 漆面美容修復</label>
-                                    <select class="service-dropdown w-full bg-black/80 border border-gray-600 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="美容修復">
-                                        <option value="">選填</option>
-                                        <optgroup label="漆面美容修復">
-                                            <option value="局部傷痕修復">局部傷痕修復 ($1,000 up)</option>
-                                            <option value="50%小美容">50% 小美容 ($6,000)</option>
-                                            <option value="80%大美容">80% 大美容 ($8,000)</option>
-                                            <option value="鏡面拉皮美容">鏡面拉皮美容 ($15,000 up)</option>
-                                        </optgroup>
-                                    </select>
-                                </div>
-
-                                <div class="md:col-span-2 pt-6 border-t border-white/10">
-                                    <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold">4. 單項護理項目 (可複選)</label>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm text-gray-300 mb-8">
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除鐵粉 $300"><span>除鐵粉 $300</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除柏油 $300"><span>除柏油 $300</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="皮革保養 $300"><span>皮革保養 $300</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除蟲屍清潔 $300"><span>除蟲屍清潔 $300</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="除臭除菌 $500"><span>除臭除菌 $500</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="玻璃除油墨 $500"><span>玻璃除油墨 $500</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="深層去汙蠟 $500"><span>深層去汙蠟 $500</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="封體棕櫚蠟 $500"><span>封體棕櫚蠟 $500</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="蒸汽殺菌 $800"><span>蒸汽殺菌 $800</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="水晶棕櫚蠟 $800"><span>水晶棕櫚蠟 $800</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="引擎室清潔(含保養) $800"><span>引擎室清潔(含保養) $800</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="塑料還原 $1,000"><span>塑料還原 $1,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="皮革鍍膜 $1,500"><span>皮革鍍膜 $1,500</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="大燈修復 $3,000"><span>大燈修復 $3,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-gray-600" value="內裝深層美容 $3,500"><span>內裝深層美容 $3,500</span></label>
-                                    </div>
-
-                                    <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold border-t border-white/10 pt-6">5. 局部鍍膜項目 (可複選)</label>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm text-brand-primary">
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="全車玻璃鍍膜 $3,000"><span>全車玻璃鍍膜 $3,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="前後擋玻璃鍍膜 $2,000"><span>前後擋玻璃鍍膜 $2,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="輪框鍍膜(四顆) $2,000"><span>輪框鍍膜(四顆) $2,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="塑料件鍍膜 $2,000"><span>塑料件鍍膜 $2,000</span></label>
-                                        <label class="flex items-center space-x-2 cursor-pointer hover:text-white"><input type="checkbox" class="service-checkbox form-checkbox h-5 w-5 text-brand-primary rounded bg-black/50 border-brand-primary/50" value="引擎室鍍膜 $1,500"><span>引擎室鍍膜 $1,500</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">預約日期 *</label><input type="date" id="bookDate" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none cursor-pointer" style="color-scheme: dark;"></div>
-                                <div class="space-y-2">
-                                    <label class="text-sm text-brand-primary tracking-widest">進場時段 (10:00-20:00) *</label>
-                                    <select id="bookTime" required class="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer">
-                                        <option value="" disabled selected>請選擇時段...</option>
-                                        <option value="上午10:00">上午 10:00</option><option value="上午11:00">上午 11:00</option><option value="中午12:00">中午 12:00</option><option value="下午13:00">下午 13:00</option><option value="下午14:00">下午 14:00</option><option value="下午15:00">下午 15:00</option><option value="下午16:00">下午 16:00</option><option value="下午17:00">下午 17:00</option><option value="晚上18:00">晚上 18:00</option><option value="晚上19:00">晚上 19:00</option><option value="晚上20:00">晚上 20:00</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="pt-4">
-                            <button type="submit" id="submitBtn" class="w-full bg-brand-primary hover:bg-brand-primary-light text-white text-lg font-bold py-5 rounded-xl tracking-widest transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(37,99,235,0.4)] flex justify-center items-center">
-                                <span>確認送出預約，取得專屬報價</span>
-                            </button>
-                        </div>
-                        <div id="formStatus" class="hidden text-center text-lg font-medium tracking-wide mt-4"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact" class="py-16">
-        <div class="container mx-auto px-6">
-            <div class="max-w-6xl mx-auto glass-card p-12 md:p-20 relative overflow-hidden border border-brand-primary/20 rounded-2xl shadow-2xl">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/20 rounded-full blur-[100px]"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 relative z-10">
-                    <div class="animate-on-scroll flex flex-col justify-center">
-                        <h3 class="text-4xl md:text-5xl font-black mb-8 italic uppercase">Get In <br><span class="text-brand-primary">Contact</span></h3>
-                        <p class="text-gray-400 mb-10 font-light leading-loose">歡迎親臨現場或線上預約。XHC-DESIGN 位於新北市中和區，提供最專業的車輛評估與施工建議。</p>
-                        <div class="space-y-6">
-                            <a href="tel:0229433006" class="flex items-center space-x-6 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                                <div class="w-12 h-12 flex items-center justify-center bg-zinc-900 rounded-full text-brand-primary"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"></path></svg></div>
-                                <span class="oswald text-xl tracking-widest text-white">02-2943-3006</span>
-                            </a>
-                            <a href="https://share.google/8BQdMY6gkRjdKw6Ux" target="_blank" class="flex items-center space-x-6 group cursor-pointer hover:translate-x-2 transition-transform duration-300">
-                                <div class="w-12 h-12 flex items-center justify-center bg-zinc-900 rounded-full text-brand-primary"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"></path></svg></div>
-                                <span class="text-gray-300">新北市中和區興南路二段144號</span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="animate-on-scroll flex flex-col justify-center">
-                        <div class="bg-black/40 border border-white/5 p-10 rounded-sm flex flex-col items-center text-center">
-                            <h4 class="text-2xl font-bold text-white mb-3 tracking-widest">線上專屬顧問</h4>
-                            <a href="https://lin.ee/qndwwad" target="_blank" class="inline-block hover:scale-110 transition-transform duration-300 mb-10"><img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入XHC官方LINE" class="h-11 object-contain"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-20 border-t border-brand-primary/20 bg-black">
-        <div class="container mx-auto px-6 text-center">
-            <span class="oswald text-6xl font-black text-brand-primary tracking-tighter">XHC</span>
-            <p class="text-zinc-700 text-[10px] tracking-[0.4em] font-medium mt-4">© 2026 XHC DESIGN AUTO PARTS. ALL RIGHTS RESERVED.</p>
-        </div>
-    </footer>
-
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script>
-        // 1. LIFF 初始化與 LINE 身分靜態捕獲
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: "2010634688-4PX2Vuh8" });
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    document.getElementById('lineName').value = profile.displayName;
-                    document.getElementById('lineId').value = profile.userId;
-                } else { liff.login(); }
-            } catch (err) { console.error("LIFF 載入失敗:", err); }
-        }
-        initializeLiff();
-
-        // 2. 2026 旗艦車型動態價格資料庫
-        const pricingDB = {
-            wash: {
-                "快速洗車": { "轎車": 500, "休旅車": 800, "商務車": 1000, "加長型": 1000 },
-                "快速洗車(買10送1)": { "轎車": 5000, "休旅車": 8000, "商務車": 10000, "加長型": 10000 },
-                "精緻洗車": { "轎車": 800, "休旅車": 1000, "商務車": 1300, "加長型": 1300 },
-                "精緻洗車(買10送1)": { "轎車": 8000, "休旅車": 10000, "商務車": 13000, "加長型": 13000 },
-                "深層洗車": { "轎車": 1000, "休旅車": 1200, "商務車": 1500, "加長型": 1500 },
-                "深層洗車(買10送1)": { "轎車": 10000, "休旅車": 12000, "商務車": 15000, "加長型": 15000 },
-                "晶鑽洗車": { "轎車": 1500, "休旅車": 1700, "商務車": 2000, "加長型": 2000 },
-                "晶鑽洗車(買10送1)": { "轎車": 15000, "休旅車": 17000, "商務車": 20000, "加長型": 20000 }
-            },
-            coating: {
-                "GTECHNIQ CSL 英國白瓶": {
-                    "一年期": { "轎車": 8000, "休旅車": 9000, "商務車": 10000, "加長型": 12000 },
-                    "二年期": { "轎車": 18000, "休旅車": 19000, "商務車": 20000, "加長型": 22000 },
-                    "三年期": { "轎車": 28000, "休旅車": 29000, "商務車": 30000, "加長型": 32000 }
-                },
-                "R-Pro 高性能石墨稀": {
-                    "一年期": { "轎車": 10000, "休旅車": 11000, "商務車": 12000, "加長型": 14000 },
-                    "二年期": { "轎車": 20000, "休旅車": 21000, "商務車": 22000, "加長型": 24000 },
-                    "三年期": { "轎車": 30000, "休旅車": 31000, "商務車": 32000, "加長型": 34000 }
-                },
-                "3M 專利有機矽烷": {
-                    "一年期": { "轎車": 12000, "休旅車": 13000, "商務車": 14000, "加長型": 16000 },
-                    "二年期": { "轎車": 22000, "休旅車": 23000, "商務車": 24000, "加長型": 26000 },
-                    "三年期": { "轎車": 32000, "休旅車": 33000, "商務車": 34000, "加長型": 36000 }
-                }
-            }
-        };
-
-        const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-        // 3. 車型觸發與價格連動渲染
-        document.getElementById('carType').addEventListener('change', function() {
-            const type = this.value;
-            const washSelect = document.getElementById('washSelect');
-            const coatingSelect = document.getElementById('coatingSelect');
-            const section = document.getElementById('dynamicServiceSection');
-            const warning = document.getElementById('typeWarning');
-            
-            section.classList.remove('opacity-30', 'pointer-events-none');
-            if(warning) warning.classList.add('hidden');
-
-            washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
-            let washGroup1 = '<optgroup label="單次洗車">';
-            let washGroup2 = '<optgroup label="買10送1 超值套裝">';
-            for (const [washName, prices] of Object.entries(pricingDB.wash)) {
-                const price = prices[type];
-                if(price) {
-                    const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
-                    if(washName.includes("買10送1")) washGroup2 += optHtml;
-                    else washGroup1 += optHtml;
-                }
-            }
-            washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
-
-            coatingSelect.innerHTML = '<option value="">選填</option>';
-            for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
-                let optgroup = `<optgroup label="${coatName}">`;
-                for (const [duration, prices] of Object.entries(durations)) {
-                    const price = prices[type];
-                    if(price) {
-                        optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
-                    }
-                }
-                optgroup += `</optgroup>`;
-                coatingSelect.innerHTML += optgroup;
-            }
-        });
-
-        // 4. API 異步串接打包發送
-        document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerHTML = '🔄 安全加密傳送中...';
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-
-            // 精確抓取網頁當下顯示的完整文字內容
-            let selectedServices = [];
-            document.querySelectorAll('.service-dropdown').forEach(select => {
-                if(select.value && select.value !== "") {
-                    const selectedText = select.options[select.selectedIndex].text;
-                    selectedServices.push(`${selectedText}`);
-                }
-            });
-            document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
-                selectedServices.push(`【加購】${cb.value}`);
-            });
-            const finalServiceString = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
-
-            // 結構化封裝 JSON 欄位
-            const formData = {
-                name: document.getElementById('custName').value,
-                phone: document.getElementById('custPhone').value,
-                plate: document.getElementById('custPlate').value || '未填',       
-                address: document.getElementById('custAddress').value || '無',   
-                brand: document.getElementById('carBrand').value,
-                model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
-                service: finalServiceString, 
-                date: document.getElementById('bookDate').value,
-                time: document.getElementById('bookTime').value,
-                lineName: document.getElementById('lineName').value || '獨立瀏覽器環境',
-                lineId: document.getElementById('lineId').value || '無'
-            };
-
-            // ⚠️ 部署提示：請將下方引號內的網址，更換成您在 Apps Script 控制中心發布的最新 /exec 網址 ⚠️
-            const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
-
-            fetch(GAS_URL, {
-                method: 'POST', mode: 'no-cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(formData)
-            }).then(() => {
-                btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
-                btn.classList.replace('bg-brand-primary', 'bg-green-600');
-                const statusText = document.getElementById('formStatus');
-                statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
-                statusText.classList.remove('hidden');
-                statusText.classList.add('text-green-400');
-                
-                setTimeout(() => { 
-                    document.getElementById('xhcNativeForm').reset(); 
-                    document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
-                    document.getElementById('typeWarning').classList.remove('hidden');
-                    btn.innerHTML = '確認送出預約，取得專屬報價'; 
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-50', 'bg-green-600');
-                    btn.classList.add('bg-brand-primary');
-                }, 4000);
-            }).catch(err => {
-                console.error("傳送故障:", err);
-                btn.innerHTML = '⚠️ 網路傳輸超時，請重試';
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-            });
-        });
-
-        // 導覽列效果
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
-        });
-        
-        // 價格分頁切換
-        function switchPricing(type) {
-            const tabs = ['wash', 'coating', 'ppf', 'mods'];
-            tabs.forEach(tab => {
-                const contentEl = document.getElementById(`pricing-${tab}`);
-                const btnEl = document.getElementById(`tab-${tab}`);
-                if (tab === type) {
-                    contentEl.classList.remove('hidden');
-                    btnEl.classList.add('tab-active', 'text-brand-primary');
-                    btnEl.classList.remove('text-zinc-500');
-                } else {
-                    contentEl.classList.add('hidden');
-                    btnEl.classList.remove('tab-active', 'text-brand-primary');
-                    btnEl.classList.add('text-zinc-500');
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+                                <div class="space-y-2"><label class="text-sm text-brand-primary tracking-widest">聯絡電話 *</label><input type="tel" id="custPhone" required class="w-full bg-black/50 border border-white/
