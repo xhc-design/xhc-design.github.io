@@ -785,7 +785,7 @@
                             
                             <div class="space-y-2 md:col-span-2">
                                 <label class="text-sm text-white font-bold tracking-widest bg-brand-primary px-3 py-1 rounded inline-block mb-1">請選擇車型級距 *</label>
-                                <select id="carType" onchange="unlockServices(this.value)" required class="w-full bg-black border-2 border-brand-primary rounded-lg p-4 text-white text-lg font-bold focus:ring-2 focus:ring-brand-primary outline-none appearance-none cursor-pointer">
+                                <select id="carType" required class="w-full bg-black border-2 border-brand-primary rounded-lg p-4 text-white text-lg font-bold focus:ring-2 focus:ring-brand-primary outline-none appearance-none transition-colors cursor-pointer shadow-[0_0_15px_rgba(37,99,235,0.2)]">
                                     <option value="" disabled selected>請選擇車型級距</option>
                                     <option value="轎車">轎車</option>
                                     <option value="休旅車">休旅車/旅行車</option>
@@ -960,52 +960,45 @@
 
     const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    // 3. 車型觸發與價格連動渲染 (終極防彈版：直接綁定全局函數)
-        window.unlockServices = function(type) {
-            try {
-                if (!type) return;
-                
-                const washSelect = document.getElementById('washSelect');
-                const coatingSelect = document.getElementById('coatingSelect');
-                const section = document.getElementById('dynamicServiceSection');
-                const warning = document.getElementById('typeWarning');
-                
-                // 1. 強制解除反灰鎖定與隱藏警告
-                section.classList.remove('opacity-30', 'pointer-events-none');
-                if(warning) warning.classList.add('hidden');
+    // 3. 車型觸發與價格渲染
+    document.getElementById('carType').addEventListener('change', function() {
+        const type = this.value;
+        const washSelect = document.getElementById('washSelect');
+        const coatingSelect = document.getElementById('coatingSelect');
+        const section = document.getElementById('dynamicServiceSection');
+        const warning = document.getElementById('typeWarning');
+        
+        section.classList.remove('opacity-30', 'pointer-events-none');
+        if(warning) warning.classList.add('hidden');
+        this.classList.remove('border-brand-primary');
+        this.classList.add('border-green-500', 'text-green-400');
 
-                // 2. 動態載入洗車方案
-                washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
-                let washGroup1 = '<optgroup label="單次洗車">';
-                let washGroup2 = '<optgroup label="買10送1 超值套裝">';
-                for (const [washName, prices] of Object.entries(pricingDB.wash)) {
-                    const price = prices[type];
-                    if(price) {
-                        const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
-                        if(washName.includes("買10送1")) washGroup2 += optHtml;
-                        else washGroup1 += optHtml;
-                    }
-                }
-                washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
-
-                // 3. 動態載入鍍膜方案
-                coatingSelect.innerHTML = '<option value="">選填</option>';
-                for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
-                    let optgroup = `<optgroup label="${coatName}">`;
-                    for (const [duration, prices] of Object.entries(durations)) {
-                        const price = prices[type];
-                        if(price) {
-                            optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
-                        }
-                    }
-                    optgroup += `</optgroup>`;
-                    coatingSelect.innerHTML += optgroup;
-                }
-            } catch (error) {
-                // 如果系統有隱藏錯誤，直接彈出視窗警告，不再死當
-                alert('選單解鎖失敗，偵測到異常：' + error.message);
+        washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
+        let washGroup1 = '<optgroup label="單次洗車">';
+        let washGroup2 = '<optgroup label="買10送1 超值套裝">';
+        for (const [washName, prices] of Object.entries(pricingDB.wash)) {
+            const price = prices[type];
+            if(price) {
+                const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
+                if(washName.includes("買10送1")) washGroup2 += optHtml;
+                else washGroup1 += optHtml;
             }
-        };
+        }
+        washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
+
+        coatingSelect.innerHTML = '<option value="">選填</option>';
+        for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
+            let optgroup = `<optgroup label="${coatName}">`;
+            for (const [duration, prices] of Object.entries(durations)) {
+                const price = prices[type];
+                if(price) {
+                    optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                }
+            }
+            optgroup += `</optgroup>`;
+            coatingSelect.innerHTML += optgroup;
+        }
+    });
 
     // 4. API 異步串接打包發送 (升級：自動回傳 LINE 訊息通知)
         document.getElementById('xhcNativeForm').addEventListener('submit', function(e) {
