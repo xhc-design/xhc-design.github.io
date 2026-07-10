@@ -902,7 +902,7 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    // 1. LIFF 初始化
+    // 1. LIFF 初始化 (安全模式)
     async function initializeLiff() {
         try {
             await liff.init({ liffId: "2010634688-4PX2Vuh8" });
@@ -910,12 +910,12 @@
                 const profile = await liff.getProfile();
                 document.getElementById('lineName').value = profile.displayName;
                 document.getElementById('lineId').value = profile.userId;
-            } else { liff.login(); }
-        } catch (err) { console.error("LIFF Fail:", err); }
+            }
+        } catch (err) { console.warn("LIFF 環境未準備好，將以一般網頁模式運行"); }
     }
     initializeLiff();
 
-    // 2. 核心價格資料庫
+    // 2. 核心價格資料庫 (完整保留您的 XHC 設定)
     const pricingDB = {
         wash: {
             "快速洗車": { "轎車": 500, "休旅車": 800, "商務車": 1000, "加長型": 1000 },
@@ -960,51 +960,62 @@
             }
         }
     };
-
     const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-    // 3. 車型觸發與價格渲染
-    document.getElementById('carType').addEventListener('change', function() {
-        const type = this.value;
-        const washSelect = document.getElementById('washSelect');
-        const coatingSelect = document.getElementById('coatingSelect');
-        const section = document.getElementById('dynamicServiceSection');
-        const warning = document.getElementById('typeWarning');
-        
-        section.classList.remove('opacity-30', 'pointer-events-none');
-        if(warning) warning.classList.add('hidden');
-        this.classList.remove('border-brand-primary');
-        this.classList.add('border-green-500', 'text-green-400');
+    // 3. 車型觸發與價格渲染 (已排除所有衝突)
+    const carTypeSelect = document.getElementById('carType');
+    if (carTypeSelect) {
+        carTypeSelect.addEventListener('change', function() {
+            try {
+                const type = this.value;
+                const washSelect = document.getElementById('washSelect');
+                const coatingSelect = document.getElementById('coatingSelect');
+                const section = document.getElementById('dynamicServiceSection');
+                const warning = document.getElementById('typeWarning');
+                
+                // 強制解除反灰鎖定
+                section.classList.remove('opacity-30', 'pointer-events-none');
+                if(warning) warning.classList.add('hidden');
+                this.classList.remove('border-brand-primary');
+                this.classList.add('border-green-500', 'text-green-400');
 
-        washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
-        let washGroup1 = '<optgroup label="單次洗車">';
-        let washGroup2 = '<optgroup label="買10送1 超值套裝">';
-        for (const [washName, prices] of Object.entries(pricingDB.wash)) {
-            const price = prices[type];
-            if(price) {
-                const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
-                if(washName.includes("買10送1")) washGroup2 += optHtml;
-                else washGroup1 += optHtml;
-            }
-        }
-        washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
-
-        coatingSelect.innerHTML = '<option value="">選填</option>';
-        for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
-            let optgroup = `<optgroup label="${coatName}">`;
-            for (const [duration, prices] of Object.entries(durations)) {
-                const price = prices[type];
-                if(price) {
-                    optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                // 動態載入洗車方案
+                washSelect.innerHTML = '<option value="">請選擇洗車方案</option>';
+                let washGroup1 = '<optgroup label="單次洗車">';
+                let washGroup2 = '<optgroup label="買10送1 超值套裝">';
+                for (const [washName, prices] of Object.entries(pricingDB.wash)) {
+                    const price = prices[type];
+                    if(price) {
+                        const optHtml = `<option value="${washName}">[${type}] ${washName} ($${formatMoney(price)})</option>`;
+                        if(washName.includes("買10送1")) washGroup2 += optHtml;
+                        else washGroup1 += optHtml;
+                    }
                 }
-            }
-            optgroup += `</optgroup>`;
-            coatingSelect.innerHTML += optgroup;
-        }
-    });
+                washSelect.innerHTML += washGroup1 + '</optgroup>' + washGroup2 + '</optgroup>';
 
-    // 4. API 異步串接打包發送 (修復版本：已移除重複邏輯與狀態衝突)
-        document.getElementById('xhcNativeForm').addEventListener('submit', async function(e) {
+                // 動態載入鍍膜方案
+                coatingSelect.innerHTML = '<option value="">選填</option>';
+                for (const [coatName, durations] of Object.entries(pricingDB.coating)) {
+                    let optgroup = `<optgroup label="${coatName}">`;
+                    for (const [duration, prices] of Object.entries(durations)) {
+                        const price = prices[type];
+                        if(price) {
+                            optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                        }
+                    }
+                    optgroup += `</optgroup>`;
+                    coatingSelect.innerHTML += optgroup;
+                }
+            } catch (error) {
+                console.error("選單渲染錯誤，請確認 ID 是否正確:", error);
+            }
+        });
+    }
+
+    // 4. API 異步串接打包發送 (防誤觸、無衝突版本)
+    const formEl = document.getElementById('xhcNativeForm');
+    if (formEl) {
+        formEl.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const btn = document.getElementById('submitBtn');
@@ -1013,11 +1024,11 @@
 
             // 視覺防誤觸：按鈕變灰並禁用
             btn.disabled = true;
-            btn.innerHTML = '🔄 安全加密傳送中...';
+            btn.innerHTML = '🔄 系統處理中，請稍候...';
             btn.classList.add('opacity-50', 'bg-gray-600');
             btn.classList.remove('bg-brand-primary');
 
-            // 1. 封裝服務資料
+            // 抓取服務資料
             let selectedServices = [];
             document.querySelectorAll('.service-dropdown').forEach(select => {
                 if(select.value && select.value !== "") {
@@ -1029,7 +1040,7 @@
             });
             const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
 
-            // 2. 結構化資料
+            // 結構化資料
             const formData = {
                 name: document.getElementById('custName').value,
                 phone: document.getElementById('custPhone').value,
@@ -1037,7 +1048,7 @@
                 address: document.getElementById('custAddress').value || '無',   
                 brand: document.getElementById('carBrand').value,
                 model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
-                service: `[車牌: ${document.getElementById('custPlate').value}] || 方案: ${serviceItems}`, 
+                service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
                 date: document.getElementById('bookDate').value,
                 time: document.getElementById('bookTime').value,
                 lineName: document.getElementById('lineName').value || '獨立瀏覽器',
@@ -1047,7 +1058,7 @@
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
             try {
-                // 3. 發送請求
+                // 發送請求
                 await fetch(GAS_URL, {
                     method: 'POST', 
                     mode: 'no-cors',
@@ -1063,19 +1074,26 @@
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
 
-                // 4. LINE LIFF 通知
+                // LINE LIFF 通知
                 if (window.liff && liff.isLoggedIn() && liff.isInClient()) {
-                    await liff.sendMessages([{ type: 'text', text: `🏎️【XHC-DESIGN】預約成功通知\n姓名：${formData.name}\n預約方案：${serviceItems}` }]);
+                    try {
+                        await liff.sendMessages([{ type: 'text', text: `🏎️【XHC-DESIGN】預約成功通知\n姓名：${formData.name}\n預約方案：${serviceItems}` }]);
+                    } catch(liffErr) {
+                        console.warn("LINE 訊息發送失敗", liffErr);
+                    }
                 }
 
-                // 5. 重置表單狀態
+                // 重置表單與狀態
                 setTimeout(() => {
                     form.reset();
                     document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
                     document.getElementById('typeWarning').classList.remove('hidden');
+                    document.getElementById('carType').classList.remove('border-green-500', 'text-green-400');
+                    document.getElementById('carType').classList.add('border-brand-primary');
                     btn.innerHTML = '確認送出預約，取得專屬報價';
                     btn.disabled = false;
-                    btn.classList.replace('bg-green-600', 'bg-brand-primary');
+                    btn.classList.remove('opacity-50', 'bg-green-600');
+                    btn.classList.add('bg-brand-primary');
                     statusText.classList.add('hidden');
                 }, 4000);
 
@@ -1083,40 +1101,11 @@
                 console.error("傳送故障:", err);
                 btn.innerHTML = '⚠️ 網路連線異常，請重試';
                 btn.disabled = false;
+                btn.classList.remove('opacity-50');
                 btn.classList.replace('bg-gray-600', 'bg-red-600');
             }
         });
-
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
-
-        fetch(GAS_URL, {
-            method: 'POST', mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(formData)
-        }).then(() => {
-            btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
-            btn.classList.replace('bg-brand-primary', 'bg-green-600');
-            const statusText = document.getElementById('formStatus');
-            statusText.innerHTML = '預約單已送出，感謝您選擇 XHC-DESIGN。';
-            statusText.classList.remove('hidden', 'text-red-400');
-            statusText.classList.add('text-green-400');
-            
-            setTimeout(() => { 
-                document.getElementById('xhcNativeForm').reset(); 
-                document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
-                document.getElementById('carType').classList.remove('border-green-500', 'text-green-400');
-                document.getElementById('carType').classList.add('border-brand-primary');
-                btn.innerHTML = '確認送出預約，取得專屬報價'; 
-                btn.disabled = false;
-                btn.classList.remove('bg-green-600', 'opacity-75');
-                btn.classList.add('bg-brand-primary');
-            }, 4000);
-        }).catch(err => {
-            btn.innerHTML = '⚠️ 傳送失敗，請重試';
-            btn.disabled = false;
-            btn.classList.remove('opacity-75');
-        });
-    });
+    }
 </script>
 
 <section id="contact" class="py-16">
