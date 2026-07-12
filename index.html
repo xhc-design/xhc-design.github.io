@@ -833,6 +833,16 @@
                                 </select>
                             </div>
 
+                            <div class="space-y-2 md:col-span-2 border-t border-white/10 pt-4">
+                                <label class="text-sm text-green-400 tracking-widest font-bold flex items-center">
+                                <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                                    ✨ XHC 專屬限時特惠活動 (選填)
+                                </label>
+                                <select id="promoSelect" class="service-dropdown w-full bg-black/80 border border-green-500/30 rounded-lg p-3 text-white focus:border-brand-primary outline-none appearance-none cursor-pointer" data-label="優惠活動">
+                                    <option value="">不套用優惠活動</option>
+                                </select>
+                            </div>
+
                             <div class="md:col-span-2 pt-6 border-t border-white/10">
                                 <label class="text-sm text-gray-400 tracking-widest mb-4 block font-bold">4. 單項護理項目 (可複選)</label>
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-sm text-gray-300 mb-8">
@@ -915,7 +925,7 @@
     }
     initializeLiff();
 
-    // 2. 核心價格資料庫 (完整保留您的 XHC 設定)
+    // 2. 核心價格資料庫 (已新增 promo 限時特惠活動)
     const pricingDB = {
         wash: {
             "快速洗車": { "轎車": 500, "休旅車": 800, "商務車": 1000, "加長型": 1000 },
@@ -958,6 +968,10 @@
                 "二年期": { "轎車": 28000, "休旅車": 29000, "商務車": 30000, "加長型": 32000 },
                 "三年期": { "轎車": 38000, "休旅車": 39000, "商務車": 40000, "加長型": 42000 }
             }
+        },
+        promo: {
+            "【颱風過境洗車快閃】A方案｜洗車": { "轎車": 499, "休旅車": 499, "商務車": 499, "加長型": 499 },
+            "【颱風過境洗車快閃】B方案｜洗車➕打蠟": { "轎車": 999, "休旅車": 999, "商務車": 999, "加長型": 999 }
         }
     };
     const formatMoney = (num) => num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -1006,54 +1020,77 @@
                     optgroup += `</optgroup>`;
                     coatingSelect.innerHTML += optgroup;
                 }
+
+                // 🎯 動態載入優惠活動方案 (接在鍍膜後面)
+                const promoSelect = document.getElementById('promoSelect');
+                if (promoSelect) {
+                    promoSelect.innerHTML = '<option value="">不套用優惠活動</option>';
+                    let promoGroup = '<optgroup label="🔥 期間限定特惠組合">';
+                    for (const [promoName, prices] of Object.entries(pricingDB.promo)) {
+                        const price = prices[type];
+                        if(price) {
+                            promoGroup += `<option value="${promoName}">[${type}] ${promoName} ($${formatMoney(price)})</option>`;
+                        }
+                    }
+                    promoGroup += `</optgroup>`;
+                    promoSelect.innerHTML += promoGroup;
+                }
+
             } catch (error) {
                 console.error("選單渲染錯誤，請確認 ID 是否正確:", error);
             }
         });
     }
 
-    // 4. API 異步串接打包發送 (防誤觸、無衝突版本)
-    const formEl = document.getElementById('xhcNativeForm');
-    if (formEl) {
-        formEl.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const btn = document.getElementById('submitBtn');
-            const statusText = document.getElementById('formStatus');
-            const form = this;
+    // 4. API 異步串接打包發送 (已更新，納入 promoSelect)
+            const formEl = document.getElementById('xhcNativeForm');
+            if (formEl) {
+                formEl.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const btn = document.getElementById('submitBtn');
+                    const statusText = document.getElementById('formStatus');
+                    const form = this;
 
-            // 視覺防誤觸：按鈕變灰並禁用
-            btn.disabled = true;
-            btn.innerHTML = '🔄 系統處理中，請稍候...';
-            btn.classList.add('opacity-50', 'bg-gray-600');
-            btn.classList.remove('bg-brand-primary');
+                    // 視覺防誤觸：按鈕變灰並禁用
+                    btn.disabled = true;
+                    btn.innerHTML = '🔄 系統處理中，請稍候...';
+                    btn.classList.add('opacity-50', 'bg-gray-600');
+                    btn.classList.remove('bg-brand-primary');
 
-            // 抓取服務資料
-            let selectedServices = [];
-            document.querySelectorAll('.service-dropdown').forEach(select => {
-                if(select.value && select.value !== "") {
-                    selectedServices.push(select.options[select.selectedIndex].text);
-                }
-            });
-            document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
-                selectedServices.push(`【加購】${cb.value}`);
-            });
-            const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
+                    // 🎯 抓取服務資料與優惠活動
+                    let selectedServices = [];
+                    
+                    // 1. 抓取所有下拉選單 (含洗車、鍍膜、美容、優惠活動)
+                    document.querySelectorAll('.service-dropdown').forEach(select => {
+                        if(select.value && select.value !== "") {
+                            // 這裡會抓取到我們定義的格式，例如：[轎車] 【颱風快閃】B方案｜洗車➕打蠟 ($999)
+                            selectedServices.push(select.options[select.selectedIndex].text);
+                        }
+                    });
 
-            // 結構化資料
-            const formData = {
-                name: document.getElementById('custName').value,
-                phone: document.getElementById('custPhone').value,
-                plate: document.getElementById('custPlate').value || '未填',       
-                address: document.getElementById('custAddress').value || '無',   
-                brand: document.getElementById('carBrand').value,
-                model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
-                service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
-                date: document.getElementById('bookDate').value,
-                time: document.getElementById('bookTime').value,
-                lineName: document.getElementById('lineName').value || '獨立瀏覽器',
-                lineId: document.getElementById('lineId').value || '無'
-            };
+                    // 2. 抓取所有勾選的單項護理
+                    document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
+                        selectedServices.push(`【加購】${cb.value}`);
+                    });
+
+                    // 最終合併成一串明細
+                    const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
+
+                    // 結構化資料 (保持不變，會自動帶入上面處理好的 serviceItems)
+                    const formData = {
+                        name: document.getElementById('custName').value,
+                        phone: document.getElementById('custPhone').value,
+                        plate: document.getElementById('custPlate').value || '未填',       
+                        address: document.getElementById('custAddress').value || '無',   
+                        brand: document.getElementById('carBrand').value,
+                        model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
+                        service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
+                        date: document.getElementById('bookDate').value,
+                        time: document.getElementById('bookTime').value,
+                        lineName: document.getElementById('lineName').value || '獨立瀏覽器',
+                        lineId: document.getElementById('lineId').value || '無'
+                    };
 
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
