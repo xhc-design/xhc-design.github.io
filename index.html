@@ -1074,6 +1074,19 @@
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
 
+                // 🎯 【新增】LINE Tag 轉換事件觸發 (Conversion)
+                try {
+                    // 檢查 LINE Tag 基本代碼是否正常載入，避免報錯卡死
+                    if (typeof _lt !== 'undefined') {
+                        _lt('send', 'cv', {
+                            type: 'Conversion'
+                        }, ['e1dd9d03-777b-4b55-bf72-3140357352b7']);
+                        console.log("LINE Tag 轉換追蹤已成功發送！");
+                    }
+                } catch(tagErr) {
+                    console.warn("LINE Tag 追蹤遭阻擋或失敗", tagErr);
+                }
+
                 // LINE LIFF 通知
                 if (window.liff && liff.isLoggedIn() && liff.isInClient()) {
                     try {
