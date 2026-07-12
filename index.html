@@ -1000,7 +1000,7 @@
                     for (const [duration, prices] of Object.entries(durations)) {
                         const price = prices[type];
                         if(price) {
-                            optgroup += `<option value="${coatName} ${duration}">[${type}] ${duration} ($${formatMoney(price)})</option>`;
+                            optgroup += `<option value="${coatName}-${duration}">[${type}] ${coatName}-${duration} ($${formatMoney(price)})</option>`;
                         }
                     }
                     optgroup += `</optgroup>`;
