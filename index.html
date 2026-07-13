@@ -130,6 +130,11 @@
                 margin-right: 24px;
             }
         }
+		
+		/* 🚀 新增按鈕平滑過渡效果 */
+        #quickBookBtn {
+            transition: opacity 0.3s ease, transform 0.3s ease, scale 0.3s ease;
+        }
     </style>
 
     <!-- LINE Tag Base Code -->
@@ -752,7 +757,8 @@
     </script>
 
     <!-- 聯絡區塊 -->
-<section id="booking" class="py-16 bg-black/10">
+<!-- 修改為 id="bookingSection" -->
+<section id="bookingSection" class="py-16 bg-black/10">
     <div class="container mx-auto px-6">
         <div class="max-w-6xl mx-auto glass-card p-6 md:p-12 relative overflow-hidden border border-brand-primary/20 rounded-2xl shadow-2xl">
             <div class="absolute top-0 right-0 w-64 h-64 bg-brand-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -924,28 +930,35 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    // 1. LIFF 初始化 (環境自動偵測版)
+    // 1. LIFF 初始化與無縫資料恢復引擎
     async function initializeLiff() {
         try {
             await liff.init({ liffId: "2010634688-4PX2Vuh8" });
             
-            // 檢查是否在 LINE 內開啟
-            if (liff.isLoggedIn() && liff.isInClient()) {
+            // 🎯 [核心防護] 檢查是否有剛才去登入前暫存的表單資料
+            const savedData = sessionStorage.getItem('xhc_temp_form');
+            if (savedData) {
+                const parsedData = JSON.parse(savedData);
+                Object.keys(parsedData).forEach(key => {
+                    // 根據欄位 ID 恢復資料
+                    const el = document.getElementById(key);
+                    if (el) el.value = parsedData[key];
+                });
+                sessionStorage.removeItem('xhc_temp_form'); // 恢復完成後清空快取
+                
+                // 重新觸發一次您的動態解鎖引擎，確保下方選單是開啟的
+                if (typeof checkAndUnlockServices === 'function') checkAndUnlockServices();
+            }
+
+            // 如果已經登入過，就先把 LINE ID 寫入隱藏欄位準備好
+            if (liff.isLoggedIn()) {
                 const profile = await liff.getProfile();
                 document.getElementById('lineName').value = profile.displayName;
                 document.getElementById('lineId').value = profile.userId;
-                console.log("LINE 用戶已識別");
-            } else {
-                // 如果不是在 LINE 內，自動標記為「獨立瀏覽器」
-                document.getElementById('lineName').value = '獨立瀏覽器訪客';
-                document.getElementById('lineId').value = '獨立瀏覽器';
-                console.log("非 LINE 環境，已設為獨立瀏覽器模式");
+                console.log("LINE 狀態：已登入，準備就緒");
             }
         } catch (err) { 
-            // 若初始化失敗，同樣標記為「獨立瀏覽器」
-            document.getElementById('lineName').value = '獨立瀏覽器訪客';
-            document.getElementById('lineId').value = '獨立瀏覽器';
-            console.warn("LIFF 初始化異常，已自動切換為獨立瀏覽器模式"); 
+            console.warn("LIFF 初始化異常:", err); 
         }
     }
     initializeLiff();
@@ -1067,60 +1080,82 @@
         });
     }
 
-    // 4. API 異步串接打包發送 (已更新，納入 promoSelect)
-            const formEl = document.getElementById('xhcNativeForm');
-            if (formEl) {
-                formEl.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    const btn = document.getElementById('submitBtn');
-                    const statusText = document.getElementById('formStatus');
-                    const form = this;
+    // 4. API 異步串接打包發送 (已整合 LINE 授權攔截與資料暫存)
+    const formEl = document.getElementById('xhcNativeForm');
+    if (formEl) {
+        formEl.addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                    // 視覺防誤觸：按鈕變灰並禁用
-                    btn.disabled = true;
-                    btn.innerHTML = '🔄 系統處理中，請稍候...';
-                    btn.classList.add('opacity-50', 'bg-gray-600');
-                    btn.classList.remove('bg-brand-primary');
+            // 🎯 [核心攔截] 送出前檢查 LINE 授權
+            if (!liff.isLoggedIn()) {
+                alert("【系統提示】\n為了保障您的預約權益與後續客服聯繫，系統將引導您進行 LINE 快速認證。\n\n⚠️ 認證後將自動返回，您剛剛填寫的資料已為您妥善保存，無需重新輸入！");
+                
+                // 1. 將畫面上所有的輸入框資料打包存進 SessionStorage
+                const tempFormData = new FormData(formEl);
+                const dataObj = {};
+                tempFormData.forEach((value, key) => dataObj[key] = value);
+                
+                // 確保額外欄位也被存入
+                dataObj['custName'] = document.getElementById('custName').value;
+                dataObj['custPhone'] = document.getElementById('custPhone').value;
+                dataObj['custPlate'] = document.getElementById('custPlate').value;
+                dataObj['carType'] = document.getElementById('carType').value;
+                
+                sessionStorage.setItem('xhc_temp_form', JSON.stringify(dataObj));
+                
+                // 2. 強制跳轉去 LINE 授權
+                liff.login({ redirectUri: window.location.href });
+                return; 
+            } else {
+                // 如果已經授權過，確保隱藏欄位確實有抓到最新的 ID
+                try {
+                    const profile = await liff.getProfile();
+                    document.getElementById('lineName').value = profile.displayName;
+                    document.getElementById('lineId').value = profile.userId;
+                } catch (err) {
+                    console.error("獲取 Profile 失敗", err);
+                }
+            }
 
-                    // 🎯 抓取服務資料與優惠活動
-                    let selectedServices = [];
-                    
-                    // 1. 抓取所有下拉選單 (含洗車、鍍膜、美容、優惠活動)
-                    document.querySelectorAll('.service-dropdown').forEach(select => {
-                        if(select.value && select.value !== "") {
-                            // 這裡會抓取到我們定義的格式，例如：[轎車] 【颱風快閃】B方案｜洗車➕打蠟 ($999)
-                            selectedServices.push(select.options[select.selectedIndex].text);
-                        }
-                    });
+            // --- 以下為原本的資料打包與發送邏輯 ---
+            const btn = document.getElementById('submitBtn');
+            const statusText = document.getElementById('formStatus');
+            const form = this;
 
-                    // 2. 抓取所有勾選的單項護理
-                    document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
-                        selectedServices.push(`【加購】${cb.value}`);
-                    });
+            btn.disabled = true;
+            btn.innerHTML = '🔄 系統處理中，請稍候...';
+            btn.classList.add('opacity-50', 'bg-gray-600');
+            btn.classList.remove('bg-brand-primary');
 
-                    // 最終合併成一串明細
-                    const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
+            let selectedServices = [];
+            document.querySelectorAll('.service-dropdown').forEach(select => {
+                if(select.value && select.value !== "") {
+                    selectedServices.push(select.options[select.selectedIndex].text);
+                }
+            });
+            document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
+                selectedServices.push(`【加購】${cb.value}`);
+            });
 
-                    // 結構化資料 (保持不變，會自動帶入上面處理好的 serviceItems)
-                    const formData = {
-                        name: document.getElementById('custName').value,
-                        phone: document.getElementById('custPhone').value,
-                        plate: document.getElementById('custPlate').value || '未填',       
-                        address: document.getElementById('custAddress').value || '無',   
-                        brand: document.getElementById('carBrand').value,
-                        model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
-                        service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
-                        date: document.getElementById('bookDate').value,
-                        time: document.getElementById('bookTime').value,
-                        lineName: document.getElementById('lineName').value || '獨立瀏覽器',
-                        lineId: document.getElementById('lineId').value || '無'
-                    };
+            const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
+
+            const formData = {
+                name: document.getElementById('custName').value,
+                phone: document.getElementById('custPhone').value,
+                plate: document.getElementById('custPlate').value || '未填',       
+                address: document.getElementById('custAddress').value || '無',   
+                brand: document.getElementById('carBrand').value,
+                model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
+                service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
+                date: document.getElementById('bookDate').value,
+                time: document.getElementById('bookTime').value,
+                lineName: document.getElementById('lineName').value || '獨立瀏覽器',
+                lineId: document.getElementById('lineId').value || '無'
+            };
 
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
             try {
-                // 發送請求
                 await fetch(GAS_URL, {
                     method: 'POST', 
                     mode: 'no-cors',
@@ -1128,43 +1163,29 @@
                     body: JSON.stringify(formData)
                 });
 
-                // 成功回饋
                 btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
                 btn.classList.replace('bg-gray-600', 'bg-green-600');
-                
                 statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
 
-                // 🎯 【新增】LINE Tag 轉換事件觸發 (Conversion)
-                try {
-                    // 檢查 LINE Tag 基本代碼是否正常載入，避免報錯卡死
-                    if (typeof _lt !== 'undefined') {
-                        _lt('send', 'cv', {
-                            type: 'Conversion'
-                        }, ['e1dd9d03-777b-4b55-bf72-3140357352b7']);
-                        console.log("LINE Tag 轉換追蹤已成功發送！");
-                    }
-                } catch(tagErr) {
-                    console.warn("LINE Tag 追蹤遭阻擋或失敗", tagErr);
+                // LINE Tag 追蹤
+                if (typeof _lt !== 'undefined') {
+                    _lt('send', 'cv', { type: 'Conversion' }, ['e1dd9d03-777b-4b55-bf72-3140357352b7']);
                 }
 
                 // LINE LIFF 通知
                 if (window.liff && liff.isLoggedIn() && liff.isInClient()) {
                     try {
                         await liff.sendMessages([{ type: 'text', text: `🏎️【XHC-DESIGN】預約成功通知\n姓名：${formData.name}\n預約方案：${serviceItems}` }]);
-                    } catch(liffErr) {
-                        console.warn("LINE 訊息發送失敗", liffErr);
-                    }
+                    } catch(liffErr) { console.warn("訊息發送失敗", liffErr); }
                 }
 
-                // 重置表單與狀態
                 setTimeout(() => {
                     form.reset();
+                    // 恢復初始狀態
                     document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
                     document.getElementById('typeWarning').classList.remove('hidden');
-                    document.getElementById('carType').classList.remove('border-green-500', 'text-green-400');
-                    document.getElementById('carType').classList.add('border-brand-primary');
                     btn.innerHTML = '確認送出預約，取得專屬報價';
                     btn.disabled = false;
                     btn.classList.remove('opacity-50', 'bg-green-600');
@@ -1264,12 +1285,41 @@
         </div>
     </footer>
 
+    <!-- 🚀 快速預約懸浮按鈕 -->
+    <a href="#bookingSection" id="quickBookBtn" class="fixed bottom-24 right-6 md:bottom-10 md:right-10 z-[99] flex items-center justify-center gap-2 bg-brand-primary hover:bg-brand-primary-light text-white px-5 py-3 rounded-full shadow-[0_0_20px_rgba(37,99,235,0.6)] transition-all duration-500 hover:scale-105 animate-bounce group">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-300 group-hover:animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <span class="font-bold tracking-wider text-sm md:text-base">快速線上預約</span>
+    </a>
     <!-- 全站浮動 LINE 捷徑按鈕 -->
     <a href="https://lin.ee/qndwwad" target="_blank" class="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[100] hover:scale-110 transition-transform duration-300 drop-shadow-[0_4px_15px_rgba(0,195,0,0.3)]">
         <img src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png" alt="加入XHC官方LINE" height="40" border="0" class="h-10 md:h-12 object-contain">
     </a>
 
     <script>
+        // 1. 隱藏/顯示懸浮按鈕的邏輯 (已優化防抖動)
+        let scrollTimeout;
+        window.addEventListener('scroll', function() {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const quickBookBtn = document.getElementById('quickBookBtn');
+                const bookingSection = document.getElementById('bookingSection');
+                
+                if (quickBookBtn && bookingSection) {
+                    const rect = bookingSection.getBoundingClientRect();
+                    // 當預約區塊進入畫面 70% 時隱藏
+                    if (rect.top < window.innerHeight * 0.7) {
+                        quickBookBtn.style.opacity = '0';
+                        quickBookBtn.style.pointerEvents = 'none';
+                    } else {
+                        quickBookBtn.style.opacity = '1';
+                        quickBookBtn.style.pointerEvents = 'auto';
+                    }
+                }
+            }, 50); // 減少計算頻率
+        });
+	
         // 導覽列捲動效果
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
