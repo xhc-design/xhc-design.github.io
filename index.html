@@ -930,35 +930,28 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    // 1. LIFF 初始化與無縫資料恢復引擎
+    // 1. LIFF 初始化 (環境自動偵測版)
     async function initializeLiff() {
         try {
             await liff.init({ liffId: "2010634688-4PX2Vuh8" });
             
-            // 🎯 [核心防護] 檢查是否有剛才去登入前暫存的表單資料
-            const savedData = sessionStorage.getItem('xhc_temp_form');
-            if (savedData) {
-                const parsedData = JSON.parse(savedData);
-                Object.keys(parsedData).forEach(key => {
-                    // 根據欄位 ID 恢復資料
-                    const el = document.getElementById(key);
-                    if (el) el.value = parsedData[key];
-                });
-                sessionStorage.removeItem('xhc_temp_form'); // 恢復完成後清空快取
-                
-                // 重新觸發一次您的動態解鎖引擎，確保下方選單是開啟的
-                if (typeof checkAndUnlockServices === 'function') checkAndUnlockServices();
-            }
-
-            // 如果已經登入過，就先把 LINE ID 寫入隱藏欄位準備好
-            if (liff.isLoggedIn()) {
+            // 檢查是否在 LINE 內開啟
+            if (liff.isLoggedIn() && liff.isInClient()) {
                 const profile = await liff.getProfile();
                 document.getElementById('lineName').value = profile.displayName;
                 document.getElementById('lineId').value = profile.userId;
-                console.log("LINE 狀態：已登入，準備就緒");
+                console.log("LINE 用戶已識別");
+            } else {
+                // 如果不是在 LINE 內，自動標記為「獨立瀏覽器」
+                document.getElementById('lineName').value = '獨立瀏覽器訪客';
+                document.getElementById('lineId').value = '獨立瀏覽器';
+                console.log("非 LINE 環境，已設為獨立瀏覽器模式");
             }
         } catch (err) { 
-            console.warn("LIFF 初始化異常:", err); 
+            // 若初始化失敗，同樣標記為「獨立瀏覽器」
+            document.getElementById('lineName').value = '獨立瀏覽器訪客';
+            document.getElementById('lineId').value = '獨立瀏覽器';
+            console.warn("LIFF 初始化異常，已自動切換為獨立瀏覽器模式"); 
         }
     }
     initializeLiff();
