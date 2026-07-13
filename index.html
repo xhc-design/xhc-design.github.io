@@ -1283,26 +1283,22 @@
     </a>
 
     <script>
-        // 1. 隱藏/顯示懸浮按鈕的邏輯 (已優化防抖動)
-        let scrollTimeout;
+        // 1. 隱藏/顯示懸浮按鈕的邏輯 (新增這一段)
         window.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                const quickBookBtn = document.getElementById('quickBookBtn');
-                const bookingSection = document.getElementById('bookingSection');
-                
-                if (quickBookBtn && bookingSection) {
-                    const rect = bookingSection.getBoundingClientRect();
-                    // 當預約區塊進入畫面 70% 時隱藏
-                    if (rect.top < window.innerHeight * 0.7) {
-                        quickBookBtn.style.opacity = '0';
-                        quickBookBtn.style.pointerEvents = 'none';
-                    } else {
-                        quickBookBtn.style.opacity = '1';
-                        quickBookBtn.style.pointerEvents = 'auto';
-                    }
+            const quickBookBtn = document.getElementById('quickBookBtn');
+            const bookingSection = document.getElementById('bookingSection');
+            
+            if (quickBookBtn && bookingSection) {
+                const rect = bookingSection.getBoundingClientRect();
+                // 當預約區塊已經出現在畫面中時 (進入 70% 範圍)，隱藏懸浮按鈕
+                if (rect.top < window.innerHeight * 0.7) {
+                    quickBookBtn.style.opacity = '0';
+                    quickBookBtn.style.pointerEvents = 'none';
+                } else {
+                    quickBookBtn.style.opacity = '1';
+                    quickBookBtn.style.pointerEvents = 'auto';
                 }
-            }, 50); // 減少計算頻率
+            }
         });
 	
         // 導覽列捲動效果
