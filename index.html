@@ -924,16 +924,29 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    // 1. LIFF 初始化 (安全模式)
+    // 1. LIFF 初始化 (環境自動偵測版)
     async function initializeLiff() {
         try {
             await liff.init({ liffId: "2010634688-4PX2Vuh8" });
-            if (liff.isLoggedIn()) {
+            
+            // 檢查是否在 LINE 內開啟
+            if (liff.isLoggedIn() && liff.isInClient()) {
                 const profile = await liff.getProfile();
                 document.getElementById('lineName').value = profile.displayName;
                 document.getElementById('lineId').value = profile.userId;
+                console.log("LINE 用戶已識別");
+            } else {
+                // 如果不是在 LINE 內，自動標記為「獨立瀏覽器」
+                document.getElementById('lineName').value = '獨立瀏覽器訪客';
+                document.getElementById('lineId').value = '獨立瀏覽器';
+                console.log("非 LINE 環境，已設為獨立瀏覽器模式");
             }
-        } catch (err) { console.warn("LIFF 環境未準備好，將以一般網頁模式運行"); }
+        } catch (err) { 
+            // 若初始化失敗，同樣標記為「獨立瀏覽器」
+            document.getElementById('lineName').value = '獨立瀏覽器訪客';
+            document.getElementById('lineId').value = '獨立瀏覽器';
+            console.warn("LIFF 初始化異常，已自動切換為獨立瀏覽器模式"); 
+        }
     }
     initializeLiff();
 
