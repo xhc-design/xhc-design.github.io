@@ -1080,82 +1080,60 @@
         });
     }
 
-    // 4. API 異步串接打包發送 (已整合 LINE 授權攔截與資料暫存)
-    const formEl = document.getElementById('xhcNativeForm');
-    if (formEl) {
-        formEl.addEventListener('submit', async function(e) {
-            e.preventDefault();
+    // 4. API 異步串接打包發送 (已更新，納入 promoSelect)
+            const formEl = document.getElementById('xhcNativeForm');
+            if (formEl) {
+                formEl.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const btn = document.getElementById('submitBtn');
+                    const statusText = document.getElementById('formStatus');
+                    const form = this;
 
-            // 🎯 [核心攔截] 送出前檢查 LINE 授權
-            if (!liff.isLoggedIn()) {
-                alert("【系統提示】\n為了保障您的預約權益與後續客服聯繫，系統將引導您進行 LINE 快速認證。\n\n⚠️ 認證後將自動返回，您剛剛填寫的資料已為您妥善保存，無需重新輸入！");
-                
-                // 1. 將畫面上所有的輸入框資料打包存進 SessionStorage
-                const tempFormData = new FormData(formEl);
-                const dataObj = {};
-                tempFormData.forEach((value, key) => dataObj[key] = value);
-                
-                // 確保額外欄位也被存入
-                dataObj['custName'] = document.getElementById('custName').value;
-                dataObj['custPhone'] = document.getElementById('custPhone').value;
-                dataObj['custPlate'] = document.getElementById('custPlate').value;
-                dataObj['carType'] = document.getElementById('carType').value;
-                
-                sessionStorage.setItem('xhc_temp_form', JSON.stringify(dataObj));
-                
-                // 2. 強制跳轉去 LINE 授權
-                liff.login({ redirectUri: window.location.href });
-                return; 
-            } else {
-                // 如果已經授權過，確保隱藏欄位確實有抓到最新的 ID
-                try {
-                    const profile = await liff.getProfile();
-                    document.getElementById('lineName').value = profile.displayName;
-                    document.getElementById('lineId').value = profile.userId;
-                } catch (err) {
-                    console.error("獲取 Profile 失敗", err);
-                }
-            }
+                    // 視覺防誤觸：按鈕變灰並禁用
+                    btn.disabled = true;
+                    btn.innerHTML = '🔄 系統處理中，請稍候...';
+                    btn.classList.add('opacity-50', 'bg-gray-600');
+                    btn.classList.remove('bg-brand-primary');
 
-            // --- 以下為原本的資料打包與發送邏輯 ---
-            const btn = document.getElementById('submitBtn');
-            const statusText = document.getElementById('formStatus');
-            const form = this;
+                    // 🎯 抓取服務資料與優惠活動
+                    let selectedServices = [];
+                    
+                    // 1. 抓取所有下拉選單 (含洗車、鍍膜、美容、優惠活動)
+                    document.querySelectorAll('.service-dropdown').forEach(select => {
+                        if(select.value && select.value !== "") {
+                            // 這裡會抓取到我們定義的格式，例如：[轎車] 【颱風快閃】B方案｜洗車➕打蠟 ($999)
+                            selectedServices.push(select.options[select.selectedIndex].text);
+                        }
+                    });
 
-            btn.disabled = true;
-            btn.innerHTML = '🔄 系統處理中，請稍候...';
-            btn.classList.add('opacity-50', 'bg-gray-600');
-            btn.classList.remove('bg-brand-primary');
+                    // 2. 抓取所有勾選的單項護理
+                    document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
+                        selectedServices.push(`【加購】${cb.value}`);
+                    });
 
-            let selectedServices = [];
-            document.querySelectorAll('.service-dropdown').forEach(select => {
-                if(select.value && select.value !== "") {
-                    selectedServices.push(select.options[select.selectedIndex].text);
-                }
-            });
-            document.querySelectorAll('.service-checkbox:checked').forEach(cb => {
-                selectedServices.push(`【加購】${cb.value}`);
-            });
+                    // 最終合併成一串明細
+                    const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
 
-            const serviceItems = selectedServices.length > 0 ? selectedServices.join(" + ") : "僅安排進場，現場面議";
-
-            const formData = {
-                name: document.getElementById('custName').value,
-                phone: document.getElementById('custPhone').value,
-                plate: document.getElementById('custPlate').value || '未填',       
-                address: document.getElementById('custAddress').value || '無',   
-                brand: document.getElementById('carBrand').value,
-                model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
-                service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
-                date: document.getElementById('bookDate').value,
-                time: document.getElementById('bookTime').value,
-                lineName: document.getElementById('lineName').value || '獨立瀏覽器',
-                lineId: document.getElementById('lineId').value || '無'
-            };
+                    // 結構化資料 (保持不變，會自動帶入上面處理好的 serviceItems)
+                    const formData = {
+                        name: document.getElementById('custName').value,
+                        phone: document.getElementById('custPhone').value,
+                        plate: document.getElementById('custPlate').value || '未填',       
+                        address: document.getElementById('custAddress').value || '無',   
+                        brand: document.getElementById('carBrand').value,
+                        model: document.getElementById('carModel').value + " (" + document.getElementById('carType').value + ")",
+                        service: `[車牌: ${document.getElementById('custPlate').value || '未填'}] || 方案: ${serviceItems}`, 
+                        date: document.getElementById('bookDate').value,
+                        time: document.getElementById('bookTime').value,
+                        lineName: document.getElementById('lineName').value || '獨立瀏覽器',
+                        lineId: document.getElementById('lineId').value || '無'
+                    };
 
             const GAS_URL = "https://script.google.com/macros/s/AKfycbxbk66JI7BB628PncvGAcr7z8mMV0BuQcJP4ESXSese5nN39GH-4olphkP72qZ9WCa3/exec";
 
             try {
+                // 發送請求
                 await fetch(GAS_URL, {
                     method: 'POST', 
                     mode: 'no-cors',
@@ -1163,29 +1141,43 @@
                     body: JSON.stringify(formData)
                 });
 
+                // 成功回饋
                 btn.innerHTML = '✅ 預約成功！專員將盡快聯繫您';
                 btn.classList.replace('bg-gray-600', 'bg-green-600');
+                
                 statusText.innerHTML = '您的預約請求已成功寫入雲端排程管理後台。';
                 statusText.classList.remove('hidden');
                 statusText.classList.add('text-green-400');
 
-                // LINE Tag 追蹤
-                if (typeof _lt !== 'undefined') {
-                    _lt('send', 'cv', { type: 'Conversion' }, ['e1dd9d03-777b-4b55-bf72-3140357352b7']);
+                // 🎯 【新增】LINE Tag 轉換事件觸發 (Conversion)
+                try {
+                    // 檢查 LINE Tag 基本代碼是否正常載入，避免報錯卡死
+                    if (typeof _lt !== 'undefined') {
+                        _lt('send', 'cv', {
+                            type: 'Conversion'
+                        }, ['e1dd9d03-777b-4b55-bf72-3140357352b7']);
+                        console.log("LINE Tag 轉換追蹤已成功發送！");
+                    }
+                } catch(tagErr) {
+                    console.warn("LINE Tag 追蹤遭阻擋或失敗", tagErr);
                 }
 
                 // LINE LIFF 通知
                 if (window.liff && liff.isLoggedIn() && liff.isInClient()) {
                     try {
                         await liff.sendMessages([{ type: 'text', text: `🏎️【XHC-DESIGN】預約成功通知\n姓名：${formData.name}\n預約方案：${serviceItems}` }]);
-                    } catch(liffErr) { console.warn("訊息發送失敗", liffErr); }
+                    } catch(liffErr) {
+                        console.warn("LINE 訊息發送失敗", liffErr);
+                    }
                 }
 
+                // 重置表單與狀態
                 setTimeout(() => {
                     form.reset();
-                    // 恢復初始狀態
                     document.getElementById('dynamicServiceSection').classList.add('opacity-30', 'pointer-events-none');
                     document.getElementById('typeWarning').classList.remove('hidden');
+                    document.getElementById('carType').classList.remove('border-green-500', 'text-green-400');
+                    document.getElementById('carType').classList.add('border-brand-primary');
                     btn.innerHTML = '確認送出預約，取得專屬報價';
                     btn.disabled = false;
                     btn.classList.remove('opacity-50', 'bg-green-600');
