@@ -800,11 +800,23 @@
                     </div>
 
                     <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/10 shadow-inner space-y-6">
-                        <h4 class="text-xl font-bold text-white border-b border-white/10 pb-4 mb-4 flex items-center"><span class="w-2 h-6 bg-brand-primary mr-3 rounded-full"></span>專屬服務配置清單</h4>
-                        
-                        <p id="typeWarning" class="text-brand-primary text-sm font-bold mb-4 animate-pulse">⚠️ 請先於上方選擇「車型級距」解鎖報價。</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-30 pointer-events-none transition-all duration-500" id="dynamicServiceSection">
+                        <h4 class="text-xl font-bold text-white border-b border-white/10 pb-4 mb-4 flex items-center">
+                            <span class="w-2 h-6 bg-brand-primary mr-3 rounded-full"></span>專屬服務配置清單
+                        </h4>
+    
+                        <p id="typeWarning" class="text-brand-primary text-sm font-bold mb-4 animate-pulse">
+                           ⚠️ 請先於上方選擇「車型級距」解鎖報價。
+                        </p>
+    
+                        <div class="relative">
+        
+                            <div id="lockOverlay" class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 backdrop-blur-sm rounded-xl transition-opacity duration-500">
+                                <span class="inline-block w-3 h-3 bg-brand-primary rounded-full animate-ping mb-3"></span>
+                                <p class="text-white font-bold tracking-widest text-lg">🔒 請先填寫上方必填資料</p>
+                                <p class="text-brand-primary text-sm mt-2">系統將自動為您解鎖專屬報價與選項</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-30 pointer-events-none transition-all duration-500" id="dynamicServiceSection">
                             
                             <div class="space-y-2">
                                 <label class="text-sm text-gray-300 tracking-widest font-bold">1. 洗車護理方案</label>
@@ -912,16 +924,29 @@
 
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <script>
-    // 1. LIFF 初始化 (安全模式)
+    // 1. LIFF 初始化 (環境自動偵測版)
     async function initializeLiff() {
         try {
             await liff.init({ liffId: "2010634688-4PX2Vuh8" });
-            if (liff.isLoggedIn()) {
+            
+            // 檢查是否在 LINE 內開啟
+            if (liff.isLoggedIn() && liff.isInClient()) {
                 const profile = await liff.getProfile();
                 document.getElementById('lineName').value = profile.displayName;
                 document.getElementById('lineId').value = profile.userId;
+                console.log("LINE 用戶已識別");
+            } else {
+                // 如果不是在 LINE 內，自動標記為「獨立瀏覽器」
+                document.getElementById('lineName').value = '獨立瀏覽器訪客';
+                document.getElementById('lineId').value = '獨立瀏覽器';
+                console.log("非 LINE 環境，已設為獨立瀏覽器模式");
             }
-        } catch (err) { console.warn("LIFF 環境未準備好，將以一般網頁模式運行"); }
+        } catch (err) { 
+            // 若初始化失敗，同樣標記為「獨立瀏覽器」
+            document.getElementById('lineName').value = '獨立瀏覽器訪客';
+            document.getElementById('lineId').value = '獨立瀏覽器';
+            console.warn("LIFF 初始化異常，已自動切換為獨立瀏覽器模式"); 
+        }
     }
     initializeLiff();
 
@@ -1280,7 +1305,54 @@
             });
         }, { threshold: 0.1 });
 
+        // 滾動偵測動畫
         document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // 🎯 專屬服務區塊：動態解鎖引擎
+        document.addEventListener('DOMContentLoaded', function() {
+            const requiredInputIds = ['custName', 'custPhone', 'carType']; 
+            const serviceSection = document.getElementById('dynamicServiceSection');
+            const lockOverlay = document.getElementById('lockOverlay');
+            const typeWarning = document.getElementById('typeWarning');
+
+            function checkAndUnlockServices() {
+                let allFilled = true;
+                requiredInputIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el || el.value.trim() === '') allFilled = false;
+                });
+
+                if (allFilled) {
+                    // 解鎖：移除半透明與不可點擊
+                    if(serviceSection) serviceSection.classList.remove('opacity-30', 'pointer-events-none');
+                    if(lockOverlay) {
+                        lockOverlay.style.opacity = '0'; 
+                        setTimeout(() => lockOverlay.style.display = 'none', 500);
+                    }
+                    if(typeWarning) typeWarning.style.display = 'none';
+                } else {
+                    // 鎖定：恢復半透明與不可點擊
+                    if(serviceSection) serviceSection.classList.add('opacity-30', 'pointer-events-none');
+                    if(lockOverlay) {
+                        lockOverlay.style.display = 'flex';
+                        lockOverlay.style.opacity = '1';
+                    }
+                    if(typeWarning) typeWarning.style.display = 'block';
+                }
+            }
+
+            // 監聽必填欄位輸入與選取
+            requiredInputIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', checkAndUnlockServices);
+                    el.addEventListener('change', checkAndUnlockServices);
+                }
+            });
+
+            // 初始化檢查
+            checkAndUnlockServices();
+        });
     </script>
 	
 </body>
