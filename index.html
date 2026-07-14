@@ -1292,54 +1292,7 @@
             });
         }, { threshold: 0.1 });
 
-        // 滾動偵測動畫
         document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
-
-        // 🎯 專屬服務區塊：動態解鎖引擎
-        document.addEventListener('DOMContentLoaded', function() {
-            const requiredInputIds = ['custName', 'custPhone', 'carType']; 
-            const serviceSection = document.getElementById('dynamicServiceSection');
-            const lockOverlay = document.getElementById('lockOverlay');
-            const typeWarning = document.getElementById('typeWarning');
-
-            function checkAndUnlockServices() {
-                let allFilled = true;
-                requiredInputIds.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el || el.value.trim() === '') allFilled = false;
-                });
-
-                if (allFilled) {
-                    // 解鎖：移除半透明與不可點擊
-                    if(serviceSection) serviceSection.classList.remove('opacity-30', 'pointer-events-none');
-                    if(lockOverlay) {
-                        lockOverlay.style.opacity = '0'; 
-                        setTimeout(() => lockOverlay.style.display = 'none', 500);
-                    }
-                    if(typeWarning) typeWarning.style.display = 'none';
-                } else {
-                    // 鎖定：恢復半透明與不可點擊
-                    if(serviceSection) serviceSection.classList.add('opacity-30', 'pointer-events-none');
-                    if(lockOverlay) {
-                        lockOverlay.style.display = 'flex';
-                        lockOverlay.style.opacity = '1';
-                    }
-                    if(typeWarning) typeWarning.style.display = 'block';
-                }
-            }
-
-            // 監聽必填欄位輸入與選取
-            requiredInputIds.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    el.addEventListener('input', checkAndUnlockServices);
-                    el.addEventListener('change', checkAndUnlockServices);
-                }
-            });
-
-            // 初始化檢查
-            checkAndUnlockServices();
-        });
     </script>
 	
 </body>
